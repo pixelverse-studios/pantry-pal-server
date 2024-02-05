@@ -12,6 +12,7 @@ import typeDefs from './gql/typeDefs'
 import { Query, Mutation } from './gql/resolvers'
 import 'dotenv/config'
 
+console.log('here?')
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
   description: 'Date custom scalar type',
@@ -43,6 +44,7 @@ async function startDB() {
     })
 }
 const isProduction = process.env.ENVIRONMENT === 'PRODUCTION'
+console.log('isProduction: ', isProduction)
 async function startApolloServer() {
   const app = express()
   const httpServer = createServer(app)
@@ -51,6 +53,7 @@ async function startApolloServer() {
     apollogPlugins.push(ApolloServerPluginLandingPageDisabled())
   }
 
+  console.log('START APOLLO SERVER')
   const server = new ApolloServer({
     typeDefs,
     resolvers: { Query, Mutation, Date: dateScalar },
