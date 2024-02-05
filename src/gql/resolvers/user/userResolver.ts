@@ -1,6 +1,7 @@
 import BaseResolver from '../../baseResolver'
 import User from '../../../models/User'
-import { CatchErrorType } from '../../../utils/resolverTypes'
+import { CatchErrorType } from '../../../utils/types/general'
+import { UserSignInParams } from '../../../utils/types/user'
 
 class UserResolver extends BaseResolver {
   constructor() {
@@ -25,33 +26,51 @@ class UserResolver extends BaseResolver {
   catchError(action: string): CatchErrorType {
     return this.catchError(action)
   }
+  async getAllUsers() {
+    const allUsers = await User.find()
+    if (allUsers?.length == 0) {
+      this.error = this.errors.noUsersFound()
+      return this.handleError()
+    }
 
-//   async signIn({ email, fullName, avatar, providerId }) {
-//     if (!email) {
-//       this.error = this.errors.userNotFound
-//       return this.handleError()
-//     }
-//     const user = await User.findOne({ email })
-//     if (user !== null) {
-//       user.lastLogin = new Date()
-//       const saved = await user.save()
-//       this.typename = this.singleTypename
-//       return this.handleSingleItemSuccess(saved)
-//     } else {
-//       const [firstName, lastName] = fullName?.split(' ') ?? ['', '']
-//       const newUser = new User({
-//         email,
-//         firstName,
-//         lastName,
-//         avatar,
-//         providerId,
-//         lastLogin: new Date()
-//       })
-//       const saved = await newUser.save()
-//       this.typename = this.singleTypename
-//       return this.handleSingleItemSuccess(saved)
-//     }
-//   }
+    return this.handleMultiItemSuccess('users', allUsers)
+  }
+  async signIn({ email, fullName, avatar, providerId }: UserSignInParams) {
+    if (!email) {
+      this.error = this.errors.userNotFound
+      return this.handleError()
+    }
+    const user = await User.findOne({ email })
+    if (user !== null) {
+      user.lastLogin = new Date()
+      const saved = await user.save()
+      this.typename = this.typenames.single
+      return this.handleSingleItemSuccess(saved)
+    } else {
+      const [firstName, lastName] = fullName?.split(' ') ?? ['', '']
+      const newUser = new User({
+        email,
+        firstName,
+        lastName,
+        avatar,
+        providerId,
+        lastLogin: new Date()
+      })
+      const saved = await newUser.save()
+      this.typename = this.typenames.single
+      return this.handleSingleItemSuccess(saved)
+    }
+  }
+  async deleteProfile(email: string) {
+    const user = await User.find({ email })
+    if (!user) {
+      this.error = this.errors.userNotFound
+      return this.handleError()
+    }
+    const res = await User.findOneAndDelete({ email })
+    this.typename = this.typenames.single
+    return this.handleSingleItemSuccess(res)
+  }
 }
 
 export default UserResolver

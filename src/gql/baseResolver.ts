@@ -1,4 +1,4 @@
-import { FormValidations } from '../utils/form'
+import { FormValidations } from '../utils/validations/form'
 import User from '../models/User'
 
 interface ErrorType {
@@ -17,6 +17,7 @@ class BaseResolver {
   error: {} | ErrorType
   errors: {} | any
   catchErrorType: string
+  typename: string
   typenames: Typenames
   validations: any
   payload: any
@@ -28,6 +29,7 @@ class BaseResolver {
     this.errors = {}
     this.addedErrors = null
     this.catchErrorType = 'failure'
+    this.typename = ''
     this.typenames = { single: '', multi: '' }
     this.validations = {
       form: FormValidations

@@ -69,3 +69,5 @@ const typeDefs = gql`
     deleteProfile(email: String): UserResponse
   }
 `
+
+export default typeDefs
