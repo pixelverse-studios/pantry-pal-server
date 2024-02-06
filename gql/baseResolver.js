@@ -57,6 +57,10 @@ class BaseResolver {
     }
   }
   handleError() {
+    console.log({
+      __typename: 'Errors',
+      ...this.error
+    })
     return {
       __typename: 'Errors',
       ...this.error

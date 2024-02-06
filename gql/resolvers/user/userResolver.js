@@ -5,14 +5,14 @@ class UserResolver extends BaseResolver {
   constructor() {
     super()
     this.addedErrors = {
-      noUsersFound: {
+      noUsersFound: () => ({
         type: 'noUsersFound',
         message: () => 'No users found'
-      },
-      userNotFound: {
+      }),
+      userNotFound: () => ({
         type: 'userNotFound',
         message: () => 'User not found'
-      }
+      })
     }
     this.errors = { ...this.errors, ...this.addedErrors }
     this.typenames = {
@@ -30,7 +30,6 @@ class UserResolver extends BaseResolver {
       this.error = this.errors.noUsersFound()
       return this.handleError()
     }
-
     return this.handleMultiItemSuccess('users', allUsers)
   }
   async signIn({ email, fullName, avatar, providerId }) {
