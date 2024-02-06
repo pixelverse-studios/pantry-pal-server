@@ -8,21 +8,20 @@ import {
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
 
-import typeDefs from './gql/typeDefs'
-import { Query, Mutation } from './gql/resolvers'
+import typeDefs from './gql/typeDefs.js'
+import { Query, Mutation } from './gql/resolvers/index.js'
 import 'dotenv/config'
 
-console.log('here?')
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
   description: 'Date custom scalar type',
-  serialize(value: any): Date {
+  serialize(value) {
     return value.getTime()
   },
-  parseValue(value: any): Date {
+  parseValue(value) {
     return new Date(value)
   },
-  parseLiteral(ast): any {
+  parseLiteral(ast) {
     if (ast.kind === Kind.INT) {
       return new Date(parseInt(ast.value, 10))
     }
@@ -32,9 +31,10 @@ const dateScalar = new GraphQLScalarType({
 
 const port = process.env.PORT ?? 5050
 const DB_URL =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.xeutukt.mongodb.net/` ??
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.xeutukt.mongodb.net/?retryWrites=true&w=majority` ??
   ''
 
+console.log(DB_URL)
 async function startDB() {
   await connect(DB_URL)
     .then(() => console.log('DB connected'))
@@ -43,32 +43,29 @@ async function startDB() {
       console.log('Error connecting to DB.')
     })
 }
+startDB()
 const isProduction = process.env.ENVIRONMENT === 'PRODUCTION'
-console.log('isProduction: ', isProduction)
 async function startApolloServer() {
   const app = express()
   const httpServer = createServer(app)
   const apollogPlugins = [ApolloServerPluginDrainHttpServer({ httpServer })]
-  if (!isProduction) {
+  if (isProduction) {
     apollogPlugins.push(ApolloServerPluginLandingPageDisabled())
   }
 
-  console.log('START APOLLO SERVER')
   const server = new ApolloServer({
     typeDefs,
     resolvers: { Query, Mutation, Date: dateScalar },
     context: async ({ req }) => {
       // TODO: build out token deciphering here
-      const encodedToken = ''
+      // const encodedToken = ''
       // if (encodedToken) {
       //     const tokenString = encodedToken
       //         ? encodedToken.split('Bearer')[1]
       //         : ''
-
       //     console.log(tokenString)
       //     // const user = jwt_decode(tokenString)
-
-      //     return { req }
+      return { req }
       //     // return { req, user }
       // }
     },
@@ -77,7 +74,7 @@ async function startApolloServer() {
   })
   await server.start()
   server.applyMiddleware({ app })
-  await new Promise(resolve => httpServer.listen({ port }, resolve as any))
+  await new Promise(resolve => httpServer.listen({ port }, resolve))
   console.log(
     `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
   )

@@ -1,7 +1,5 @@
-import BaseResolver from '../../baseResolver'
-import User from '../../../models/User'
-import { CatchErrorType } from '../../../utils/types/general'
-import { UserSignInParams } from '../../../utils/types/user'
+import BaseResolver from '../../baseResolver.js'
+import User from '../../../models/User.js'
 
 class UserResolver extends BaseResolver {
   constructor() {
@@ -23,7 +21,7 @@ class UserResolver extends BaseResolver {
     }
   }
 
-  catchError(action: string): CatchErrorType {
+  catchError(action) {
     return this.catchError(action)
   }
   async getAllUsers() {
@@ -35,7 +33,7 @@ class UserResolver extends BaseResolver {
 
     return this.handleMultiItemSuccess('users', allUsers)
   }
-  async signIn({ email, fullName, avatar, providerId }: UserSignInParams) {
+  async signIn({ email, fullName, avatar, providerId }) {
     if (!email) {
       this.error = this.errors.userNotFound
       return this.handleError()
@@ -61,7 +59,7 @@ class UserResolver extends BaseResolver {
       return this.handleSingleItemSuccess(saved)
     }
   }
-  async deleteProfile(email: string) {
+  async deleteProfile(email) {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound

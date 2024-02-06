@@ -12,7 +12,7 @@ const Queries = {
 }
 
 const Mutations = {
-  async signIn(_: unknown, payload: any) {
+  async signIn(_, payload) {
     console.log(payload)
     try {
       const res = await resolver.signIn(payload)
@@ -21,7 +21,7 @@ const Mutations = {
       return resolver.catchError('signing in the user')
     }
   },
-  async deleteProfile(_: unknown, payload: any) {
+  async deleteProfile(_, payload) {
     console.log(payload)
     // TODO: Check token before executing request. Build in a development backdoor
     try {

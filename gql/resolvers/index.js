@@ -1,4 +1,4 @@
-import UserResolver from './user'
+import UserResolver from './user/index.js'
 
 export const Query = {
   ...UserResolver.Queries

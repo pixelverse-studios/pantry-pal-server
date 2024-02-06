@@ -1,28 +1,7 @@
-import { FormValidations } from '../utils/validations/form'
-import User from '../models/User'
-
-interface ErrorType {
-  type: string
-  message: string
-}
-
-interface Typenames {
-  single: string
-  multi: string
-}
+import { FormValidations } from '../utils/validations/form.js'
+import User from '../models/User.js'
 
 class BaseResolver {
-  authToken: null | string
-  addedErrors: null | any
-  error: {} | ErrorType
-  errors: {} | any
-  catchErrorType: string
-  typename: string
-  typenames: Typenames
-  validations: any
-  payload: any
-  schemas: any
-
   constructor() {
     this.authToken = null
     this.error = {}
@@ -38,15 +17,15 @@ class BaseResolver {
     this.schemas = { User }
 
     const baseErrors = {
-      notFound: (item: string) => ({
+      notFound: item => ({
         type: 'notFound',
         message: `${item} not found`
       }),
-      badInput: (field: string) => ({
+      badInput: field => ({
         type: 'badInput',
         message: `${field} is required`
       }),
-      //   someFieldsRequired: (fields: [string], item: string) => {
+      //   someFieldsRequired: (fields: [string], item) => {
       //     const fieldsToString = fields.split()
       //     return {
       //       type: 'someFieldsRequired',
@@ -60,18 +39,18 @@ class BaseResolver {
       //       message: `All of the following fields are required for ${item}: ${fieldsToString}`
       //     }
       //   },
-      failedToMutate: (field: string, action: string) => ({
+      failedToMutate: (field, action) => ({
         type: 'failedToMutate',
         message: `Failed to ${action} ${field}`
       }),
-      duplicateItem: (item: string) => ({
+      duplicateItem: item => ({
         type: 'duplicateItem',
         message: `${item} already exists`
       })
     }
     this.errors = { ...baseErrors }
   }
-  catchError(action: string) {
+  catchError(action) {
     return {
       __typename: this.catchErrorType,
       message: `There was an issue ${action}. Please try again`
@@ -83,20 +62,20 @@ class BaseResolver {
       ...this.error
     }
   }
-  handleSingleItemSuccess(values: any) {
+  handleSingleItemSuccess(values) {
     return {
       __typename: this.typenames.single,
       ...values._doc
     }
   }
-  handleMultiItemSuccess(key: string, values: any) {
+  handleMultiItemSuccess(key, values) {
     return {
       __typename: this.typenames.multi,
       [key]: values
     }
   }
-  buildPayload(params: any, source: any) {
-    const payload = {} as any
+  buildPayload(params, source) {
+    const payload = {}
     Object.entries(params).forEach(([key, value]) => {
       if (value !== source[key]) {
         payload[key] = value
