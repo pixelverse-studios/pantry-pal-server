@@ -36,7 +36,7 @@ const typeDefs = gql`
   }
 
   type User {
-    _id: String!
+    _id: ID!
     email: String
     firstName: String
     lastName: String
@@ -56,6 +56,7 @@ const typeDefs = gql`
   type Query {
     # Users
     getAllUsers: MultiUserResponse!
+    getUser(email: String): UserResponse
   }
 
   type Mutation {

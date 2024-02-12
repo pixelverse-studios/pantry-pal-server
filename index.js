@@ -7,6 +7,7 @@ import {
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
+import jwtDecode from 'jwt-decode'
 
 import typeDefs from './gql/typeDefs.js'
 import { Query, Mutation } from './gql/resolvers/index.js'
@@ -34,7 +35,6 @@ const DB_URL =
   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.xeutukt.mongodb.net/?retryWrites=true&w=majority` ??
   ''
 
-console.log(DB_URL)
 async function startDB() {
   await connect(DB_URL)
     .then(() => console.log('DB connected'))
@@ -57,17 +57,14 @@ async function startApolloServer() {
     typeDefs,
     resolvers: { Query, Mutation, Date: dateScalar },
     context: async ({ req }) => {
-      // TODO: build out token deciphering here
-      // const encodedToken = ''
-      // if (encodedToken) {
-      //     const tokenString = encodedToken
-      //         ? encodedToken.split('Bearer')[1]
-      //         : ''
-      //     console.log(tokenString)
-      //     // const user = jwt_decode(tokenString)
-      return { req }
-      //     // return { req, user }
-      // }
+      const token = req.headers?.authorization
+      if (token) {
+        const encodedString = token.split('Bearer')[1]
+        const user = jwtDecode(encodedString)
+
+        return { req, user }
+      }
+      return { req, user: null }
     },
     plugins: [...apollogPlugins],
     introspection: !isProduction

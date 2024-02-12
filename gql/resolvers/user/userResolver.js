@@ -32,6 +32,14 @@ class UserResolver extends BaseResolver {
     }
     return this.handleMultiItemSuccess('users', allUsers)
   }
+  async getUser({ email }) {
+    const user = await User.findOne({ email })
+    if (user == null) {
+      this.error = this.errors.userNotFound()
+      return this.handleError()
+    }
+    return this.handleSingleItemSuccess(user)
+  }
   async signIn({ email, fullName, avatar, providerId }) {
     if (!email) {
       this.error = this.errors.userNotFound
@@ -40,6 +48,7 @@ class UserResolver extends BaseResolver {
     const user = await User.findOne({ email })
     if (user !== null) {
       user.lastLogin = new Date()
+      user.newUser = false
       const saved = await user.save()
       this.typename = this.typenames.single
       return this.handleSingleItemSuccess(saved)
@@ -51,7 +60,8 @@ class UserResolver extends BaseResolver {
         lastName,
         avatar,
         providerId,
-        lastLogin: new Date()
+        lastLogin: new Date(),
+        newUser: true
       })
       const saved = await newUser.save()
       this.typename = this.typenames.single

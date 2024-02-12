@@ -8,12 +8,18 @@ const Queries = {
     } catch (error) {
       return resolver.catchError('fetching all users')
     }
+  },
+  async getUser(_, payload) {
+    try {
+      return await resolver.getUser(payload)
+    } catch (error) {
+      return resolver.catchError('fetching user')
+    }
   }
 }
 
 const Mutations = {
   async signIn(_, payload) {
-    console.log(payload)
     try {
       const res = await resolver.signIn(payload)
       return res
@@ -22,7 +28,6 @@ const Mutations = {
     }
   },
   async deleteProfile(_, payload) {
-    console.log(payload)
     // TODO: Check token before executing request. Build in a development backdoor
     try {
       const res = await resolver.deleteProfile(payload.email)

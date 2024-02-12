@@ -8,7 +8,8 @@ const userSchema = new Schema({
   avatar: String,
   providerId: String,
   createdAt: { type: Date, default: Date.now },
-  lastLogin: { type: Date }
+  lastLogin: { type: Date },
+  newUser: Boolean
 })
 
 export default model('User', userSchema)
