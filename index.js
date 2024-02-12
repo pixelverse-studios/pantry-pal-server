@@ -7,7 +7,7 @@ import {
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
-import jwtDecode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 
 import typeDefs from './gql/typeDefs.js'
 import { Query, Mutation } from './gql/resolvers/index.js'
