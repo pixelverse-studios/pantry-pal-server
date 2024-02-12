@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 import { FormValidations } from '../utils/validations/form.js'
 import User from '../models/User.js'
 
@@ -57,14 +58,13 @@ class BaseResolver {
     }
   }
   handleError() {
-    console.log({
-      __typename: 'Errors',
-      ...this.error
-    })
     return {
       __typename: 'Errors',
       ...this.error
     }
+  }
+  generateToken(values) {
+    return jwt.sign({ ...values }, 'PPAL_USER', { expiresIn: '110h' })
   }
   handleSingleItemSuccess(values) {
     return {
