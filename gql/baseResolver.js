@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'
 import { FormValidations } from '../utils/validations/form.js'
 import User from '../models/User.js'
 
@@ -26,20 +25,6 @@ class BaseResolver {
         type: 'badInput',
         message: `${field} is required`
       }),
-      //   someFieldsRequired: (fields: [string], item) => {
-      //     const fieldsToString = fields.split()
-      //     return {
-      //       type: 'someFieldsRequired',
-      //       message: `At least one of the following is required for ${item}: ${fieldsToString}`
-      //     }
-      //   },
-      //   allFieldsRequired: (fields, item) => {
-      //     const fieldsToString = fields.split()
-      //     return {
-      //       type: 'allFieldsRequired',
-      //       message: `All of the following fields are required for ${item}: ${fieldsToString}`
-      //     }
-      //   },
       failedToMutate: (field, action) => ({
         type: 'failedToMutate',
         message: `Failed to ${action} ${field}`
@@ -62,9 +47,6 @@ class BaseResolver {
       __typename: 'Errors',
       ...this.error
     }
-  }
-  generateToken(values) {
-    return jwt.sign({ ...values }, 'PPAL_USER', { expiresIn: '110h' })
   }
   handleSingleItemSuccess(values) {
     return {

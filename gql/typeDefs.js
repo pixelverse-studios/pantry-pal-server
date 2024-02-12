@@ -45,6 +45,7 @@ const typeDefs = gql`
     createdAt: Date
     lastLogin: Date
     newUser: Boolean
+    tier: String
   }
   union UserResponse = User | Errors
 

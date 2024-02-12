@@ -9,7 +9,8 @@ const userSchema = new Schema({
   providerId: String,
   createdAt: { type: Date, default: Date.now },
   lastLogin: { type: Date },
-  newUser: Boolean
+  newUser: Boolean,
+  tier: String
 })
 
 export default model('User', userSchema)

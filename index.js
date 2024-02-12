@@ -7,7 +7,6 @@ import {
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
-import { jwtDecode } from 'jwt-decode'
 
 import typeDefs from './gql/typeDefs.js'
 import { Query, Mutation } from './gql/resolvers/index.js'
@@ -59,10 +58,9 @@ async function startApolloServer() {
     context: async ({ req }) => {
       const token = req.headers?.authorization
       if (token) {
-        const encodedString = token.split('Bearer')[1]
-        const user = jwtDecode(encodedString)
-
-        return { req, user }
+        console.log(token)
+        // return { req, user }
+        return { req }
       }
       return { req, user: null }
     },

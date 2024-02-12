@@ -1,5 +1,6 @@
 import BaseResolver from '../../baseResolver.js'
 import User from '../../../models/User.js'
+import { TIERS_MAP } from '../../../utils/user/tiers.js'
 
 class UserResolver extends BaseResolver {
   constructor() {
@@ -41,11 +42,14 @@ class UserResolver extends BaseResolver {
     return this.handleSingleItemSuccess(user)
   }
   async signIn({ email, fullName, avatar, providerId }) {
+    console.log(email)
     if (!email) {
       this.error = this.errors.userNotFound
       return this.handleError()
     }
+
     const user = await User.findOne({ email })
+    console.log('user: ', user)
     if (user !== null) {
       user.lastLogin = new Date()
       user.newUser = false
@@ -61,7 +65,8 @@ class UserResolver extends BaseResolver {
         avatar,
         providerId,
         lastLogin: new Date(),
-        newUser: true
+        newUser: true,
+        tier: TIERS_MAP.get(1)
       })
       const saved = await newUser.save()
       this.typename = this.typenames.single
