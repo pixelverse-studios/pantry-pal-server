@@ -6,10 +6,9 @@ class FaqResolver extends BaseResolver {
     super()
     this.addedErrors = {}
     this.errors = { ...this.errors, ...this.addedErrors }
-    this.plural = 'FAQs'
     this.typenames = {
-      single: 'FAQ',
-      multi: 'MultiFaqSuccess'
+      single: 'Faq',
+      multi: 'Faqs'
     }
   }
 
@@ -19,10 +18,10 @@ class FaqResolver extends BaseResolver {
   async getFaqs() {
     const allFaqs = await FAQs.find()
     if (allFaqs?.length == 0) {
-      this.error = this.errors.notFound(this.plural)
+      this.error = this.errors.notFound(this.typenames.multi)
       return this.handleError()
     }
-    return this.handleMultiItemSuccess(this.plural, allFaqs)
+    return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
   async getFaqById({ id }) {
     const faq = await FAQs.findById(id)
@@ -43,7 +42,7 @@ class FaqResolver extends BaseResolver {
     await newFaq.save()
     const allFaqs = await FAQs.find()
     this.typename = this.typenames.multi
-    return this.handleMultiItemSuccess(this.plural, allFaqs)
+    return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
   async editFaq({ id, question, answer }) {
     const faq = await FAQs.findById(id)
@@ -56,12 +55,12 @@ class FaqResolver extends BaseResolver {
       { _id: id },
       { question, answer, updatedAt: new Date() }
     )
-    return this.handleMultiItemSuccess(this.plural, await FAQs.find())
+    return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
   async deleteFaq({ id }) {
     await FAQs.findOneAndDelete(id)
     this.typename = this.typenames.multi
-    return this.handleMultiItemSuccess(this.plural, await FAQs.find())
+    return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
 }
 

@@ -18,7 +18,7 @@ class UserResolver extends BaseResolver {
     this.errors = { ...this.errors, ...this.addedErrors }
     this.typenames = {
       single: 'User',
-      multi: 'MultiUsersSuccess'
+      multi: 'Users'
     }
   }
 
