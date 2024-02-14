@@ -42,14 +42,12 @@ class UserResolver extends BaseResolver {
     return this.handleSingleItemSuccess(user)
   }
   async signIn({ email, fullName, avatar, providerId }) {
-    console.log(email)
     if (!email) {
       this.error = this.errors.userNotFound
       return this.handleError()
     }
 
     const user = await User.findOne({ email })
-    console.log('user: ', user)
     if (user !== null) {
       user.lastLogin = new Date()
       user.newUser = false

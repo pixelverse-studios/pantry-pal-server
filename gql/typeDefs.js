@@ -54,10 +54,28 @@ const typeDefs = gql`
   }
   union MultiUserResponse = MultiUsersSuccess | Errors
 
+  type FAQ {
+    _id: ID!
+    question: String!
+    answer: String!
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  union FaqResponse = FAQ | Errors
+  type MultiFaqSuccess {
+    FAQs: [FAQ]
+  }
+  union MultiFaqResponse = MultiFaqSuccess | Errors
+
   type Query {
     # Users
     getAllUsers: MultiUserResponse!
     getUser(email: String): UserResponse
+
+    # FAQs
+    getFaqs: MultiFaqResponse
+    getFaqById(id: ID!): FaqResponse
   }
 
   type Mutation {
@@ -69,6 +87,10 @@ const typeDefs = gql`
       providerId: String
     ): UserResponse
     deleteProfile(email: String): UserResponse
+    # FAQs
+    createFaq(question: String!, answer: String!): MultiFaqResponse
+    editFaq(id: ID!, question: String, answer: String): MultiFaqResponse
+    deleteFaq(id: ID!): MultiFaqResponse
   }
 `
 
