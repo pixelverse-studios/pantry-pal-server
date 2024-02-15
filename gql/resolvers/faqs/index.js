@@ -1,19 +1,19 @@
-import FaqResolver from './faqResolver.js'
-const resolver = new FaqResolver()
+import FaqController from './faqController.js'
+const controller = new FaqController()
 
 const Queries = {
   async getFaqs() {
     try {
-      return await resolver.getFaqs()
+      return await controller.getFaqs()
     } catch (error) {
-      resolver.catchError('fetching all FAQs')
+      controller.catchError('fetching all FAQs')
     }
   },
   async getFaqById(_, payload) {
     try {
-      return await resolver.getFaqById(payload)
+      return await controller.getFaqById(payload)
     } catch (error) {
-      resolver.catchError('fetching FAQ')
+      controller.catchError('fetching FAQ')
     }
   }
 }
@@ -21,23 +21,23 @@ const Queries = {
 const Mutations = {
   async createFaq(_, payload) {
     try {
-      return await resolver.createFaq(payload)
+      return await controller.createFaq(payload)
     } catch (error) {
-      resolver.catchError('creating FAQ')
+      controller.catchError('creating FAQ')
     }
   },
   async editFaq(_, payload) {
     try {
-      return await resolver.editFaq(payload)
+      return await controller.editFaq(payload)
     } catch (error) {
-      resolver.catchError('editing FAQ')
+      controller.catchError('editing FAQ')
     }
   },
   async deleteFaq(_, payload) {
     try {
-      return await resolver.deleteFaq(payload)
+      return await controller.deleteFaq(payload)
     } catch (error) {
-      resolver.catchError('deleting FAQ')
+      controller.catchError('deleting FAQ')
     }
   }
 }

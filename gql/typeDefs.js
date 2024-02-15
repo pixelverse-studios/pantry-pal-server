@@ -68,7 +68,7 @@ const typeDefs = gql`
   }
   union FaqItems = Faqs | Errors
 
-  type PatchNoteItem {
+  type PatchNote {
     _id: ID!
     title: String!
     description: String!
@@ -80,11 +80,11 @@ const typeDefs = gql`
     createdAt: Date
     updatedAt: Date
   }
-  union PatchNote = PatchNoteItem | Errors
-  type PatchNoteItems {
-    patchNotes: [PatchNoteItem]
+  union PatchNoteItem = PatchNote | Errors
+  type PatchNotes {
+    PatchNotes: [PatchNote]
   }
-  union PatchNotes = PatchNoteItems | Errors
+  union PatchNoteItems = PatchNotes | Errors
 
   type Query {
     # Users
@@ -96,7 +96,7 @@ const typeDefs = gql`
     getFaqById(id: ID!): FaqItem
 
     # PatchNotes
-    getAllPatchNotes: PatchNotes
+    getAllPatchNotes: PatchNoteItems
   }
 
   type Mutation {
@@ -121,7 +121,7 @@ const typeDefs = gql`
       targetDate: Date
       targetVersion: Float
       graphic: String
-    ): PatchNotes
+    ): PatchNoteItems
     editPatchNote(
       id: ID!
       title: String
@@ -131,15 +131,15 @@ const typeDefs = gql`
       targetDate: Date
       targetVersion: Float
       graphic: String
-    ): PatchNotes
-    deletePatchNote(id: ID!): PatchNotes
+    ): PatchNoteItems
+    deletePatchNote(id: ID!): PatchNoteItems
     publishPatchNote(
       id: ID!
       datePublished: Date!
       display: Boolean!
       targetDate: Date
       targetVersion: Float
-    ): PatchNotes
+    ): PatchNoteItems
   }
 `
 

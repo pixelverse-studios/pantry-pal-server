@@ -1,7 +1,7 @@
 import BaseResolver from '../../baseResolver.js'
 import FAQs from '../../../models/FAQs.js'
 
-class FaqResolver extends BaseResolver {
+class FaqController extends BaseResolver {
   constructor() {
     super()
     this.addedErrors = {}
@@ -41,7 +41,6 @@ class FaqResolver extends BaseResolver {
     const newFaq = new FAQs({ question, answer, updatedAt: new Date() })
     await newFaq.save()
     const allFaqs = await FAQs.find()
-    this.typename = this.typenames.multi
     return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
   async editFaq({ id, question, answer }) {
@@ -59,9 +58,8 @@ class FaqResolver extends BaseResolver {
   }
   async deleteFaq({ id }) {
     await FAQs.findOneAndDelete(id)
-    this.typename = this.typenames.multi
     return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
 }
 
-export default FaqResolver
+export default FaqController

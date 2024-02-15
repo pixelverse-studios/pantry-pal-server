@@ -13,4 +13,4 @@ const patchNotes = new Schema({
   updatedAt: Date
 })
 
-export default model('FAQs', patchNotes)
+export default model('PatchNotes', patchNotes)
