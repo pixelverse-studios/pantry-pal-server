@@ -25,7 +25,7 @@ class UserController extends BaseResolver {
   catchError(action) {
     return this.catchError(action)
   }
-  async getAllUsers() {
+  async getAll() {
     const allUsers = await User.find()
     if (allUsers?.length == 0) {
       this.error = this.errors.noUsersFound()
@@ -33,7 +33,7 @@ class UserController extends BaseResolver {
     }
     return this.handleMultiItemSuccess('users', allUsers)
   }
-  async getUser({ email }) {
+  async getByEmail({ email }) {
     const user = await User.findOne({ email })
     if (user == null) {
       this.error = this.errors.userNotFound()
@@ -69,7 +69,7 @@ class UserController extends BaseResolver {
       return this.handleSingleItemSuccess(saved)
     }
   }
-  async deleteProfile(email) {
+  async delete(email) {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound

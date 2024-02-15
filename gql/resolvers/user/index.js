@@ -4,14 +4,14 @@ const controller = new UserController()
 const Queries = {
   async getAllUsers() {
     try {
-      return await controller.getAllUsers()
+      return await controller.getAll()
     } catch (error) {
       return controller.catchError('fetching all users')
     }
   },
   async getUser(_, payload) {
     try {
-      return await controller.getUser(payload)
+      return await controller.getByEmail(payload)
     } catch (error) {
       return controller.catchError('fetching user')
     }
@@ -30,7 +30,7 @@ const Mutations = {
   async deleteProfile(_, payload) {
     // TODO: Check token before executing request. Build in a development backdoor
     try {
-      const res = await controller.deleteProfile(payload.email)
+      const res = await controller.delete(payload.email)
       return res
     } catch (error) {
       return controller.catchError('deleting that profile')

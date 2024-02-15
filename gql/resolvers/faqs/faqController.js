@@ -15,7 +15,7 @@ class FaqController extends BaseResolver {
   catchError(action) {
     return this.catchError(action)
   }
-  async getFaqs() {
+  async getAll() {
     const allFaqs = await FAQs.find()
     if (allFaqs?.length == 0) {
       this.error = this.errors.notFound(this.typenames.multi)
@@ -23,7 +23,7 @@ class FaqController extends BaseResolver {
     }
     return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
-  async getFaqById({ id }) {
+  async getById({ id }) {
     const faq = await FAQs.findById(id)
     if (faq == null) {
       this.error = this.errors.notFound(this.typenames.single)
@@ -32,7 +32,7 @@ class FaqController extends BaseResolver {
 
     return this.handleSingleItemSuccess(faq)
   }
-  async createFaq({ question, answer }) {
+  async create({ question, answer }) {
     const faq = await FAQs.findOne({ question })
     if (faq !== null) {
       this.error = this.errors.duplicateItem(this.typenames.single)
@@ -43,7 +43,7 @@ class FaqController extends BaseResolver {
     const allFaqs = await FAQs.find()
     return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
-  async editFaq({ id, question, answer }) {
+  async edit({ id, question, answer }) {
     const faq = await FAQs.findById(id)
     if (faq == null) {
       this.error = this.errors.notFound(this.typenames.single)
@@ -56,7 +56,7 @@ class FaqController extends BaseResolver {
     )
     return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
-  async deleteFaq({ id }) {
+  async delete({ id }) {
     await FAQs.findOneAndDelete(id)
     return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }

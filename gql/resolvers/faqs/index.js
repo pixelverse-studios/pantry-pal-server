@@ -4,14 +4,14 @@ const controller = new FaqController()
 const Queries = {
   async getFaqs() {
     try {
-      return await controller.getFaqs()
+      return await controller.getAll()
     } catch (error) {
       controller.catchError('fetching all FAQs')
     }
   },
   async getFaqById(_, payload) {
     try {
-      return await controller.getFaqById(payload)
+      return await controller.getById(payload)
     } catch (error) {
       controller.catchError('fetching FAQ')
     }
@@ -21,21 +21,21 @@ const Queries = {
 const Mutations = {
   async createFaq(_, payload) {
     try {
-      return await controller.createFaq(payload)
+      return await controller.create(payload)
     } catch (error) {
       controller.catchError('creating FAQ')
     }
   },
   async editFaq(_, payload) {
     try {
-      return await controller.editFaq(payload)
+      return await controller.edit(payload)
     } catch (error) {
       controller.catchError('editing FAQ')
     }
   },
   async deleteFaq(_, payload) {
     try {
-      return await controller.deleteFaq(payload)
+      return await controller.delete(payload)
     } catch (error) {
       controller.catchError('deleting FAQ')
     }
