@@ -32,7 +32,7 @@ const typeDefs = gql`
   type Errors {
     type: ErrorTypes
     message: String
-    errors: [InputFieldError]
+    # errors: [InputFieldError]
   }
 
   type User {
@@ -47,14 +47,14 @@ const typeDefs = gql`
     newUser: Boolean
     tier: String
   }
-  union UserResponse = User | Errors
+  union UserItem = User | Errors
 
-  type MultiUsersSuccess {
+  type Users {
     users: [User]
   }
-  union MultiUserResponse = MultiUsersSuccess | Errors
+  union UserItems = Users | Errors
 
-  type FAQ {
+  type Faq {
     _id: ID!
     question: String!
     answer: String!
@@ -62,35 +62,84 @@ const typeDefs = gql`
     updatedAt: Date
   }
 
-  union FaqResponse = FAQ | Errors
-  type MultiFaqSuccess {
-    FAQs: [FAQ]
+  union FaqItem = Faq | Errors
+  type Faqs {
+    Faqs: [Faq]
   }
-  union MultiFaqResponse = MultiFaqSuccess | Errors
+  union FaqItems = Faqs | Errors
+
+  type PatchNote {
+    _id: ID!
+    title: String!
+    description: String!
+    datePublished: Date
+    display: Boolean
+    targetDate: Date
+    targetVersion: Float
+    graphic: String
+    createdAt: Date
+    updatedAt: Date
+  }
+  union PatchNoteItem = PatchNote | Errors
+  type PatchNotes {
+    PatchNotes: [PatchNote]
+  }
+  union PatchNoteItems = PatchNotes | Errors
 
   type Query {
     # Users
-    getAllUsers: MultiUserResponse!
-    getUser(email: String): UserResponse
+    getAllUsers: UserItems!
+    getUser(email: String!): UserItem
 
     # FAQs
-    getFaqs: MultiFaqResponse
-    getFaqById(id: ID!): FaqResponse
+    getFaqs: FaqItems
+    getFaqById(id: ID!): FaqItem
+
+    # PatchNotes
+    getAllPatchNotes: PatchNoteItems
   }
 
   type Mutation {
     # Users
     signIn(
-      email: String
+      email: String!
       fullName: String
       avatar: String
       providerId: String
-    ): UserResponse
-    deleteProfile(email: String): UserResponse
+    ): UserItem
+    deleteProfile(email: String!): UserItem
     # FAQs
-    createFaq(question: String!, answer: String!): MultiFaqResponse
-    editFaq(id: ID!, question: String, answer: String): MultiFaqResponse
-    deleteFaq(id: ID!): MultiFaqResponse
+    createFaq(question: String!, answer: String!): FaqItems
+    editFaq(id: ID!, question: String, answer: String): FaqItems
+    deleteFaq(id: ID!): FaqItems
+    # PatchNotes
+    createPatchNote(
+      title: String!
+      description: String!
+      datePublished: Date
+      display: Boolean
+      targetDate: Date
+      targetVersion: Float
+      graphic: String
+    ): PatchNoteItems
+    editPatchNote(
+      id: ID!
+      title: String
+      description: String
+      datePublished: Date
+      display: Boolean
+      targetDate: Date
+      targetVersion: Float
+      graphic: String
+    ): PatchNoteItems
+    deletePatchNote(id: ID!): PatchNoteItems
+    publishPatchNote(
+      id: ID!
+      datePublished: Date!
+      display: Boolean!
+      targetDate: Date
+      targetVersion: Float
+    ): PatchNoteItems
   }
 `
 

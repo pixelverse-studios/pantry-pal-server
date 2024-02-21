@@ -1,30 +1,29 @@
 import BaseResolver from '../../baseResolver.js'
 import FAQs from '../../../models/FAQs.js'
 
-class FaqResolver extends BaseResolver {
+class FaqController extends BaseResolver {
   constructor() {
     super()
     this.addedErrors = {}
     this.errors = { ...this.errors, ...this.addedErrors }
-    this.plural = 'FAQs'
     this.typenames = {
-      single: 'FAQ',
-      multi: 'MultiFaqSuccess'
+      single: 'Faq',
+      multi: 'Faqs'
     }
   }
 
   catchError(action) {
     return this.catchError(action)
   }
-  async getFaqs() {
+  async getAll() {
     const allFaqs = await FAQs.find()
     if (allFaqs?.length == 0) {
-      this.error = this.errors.notFound(this.plural)
+      this.error = this.errors.notFound(this.typenames.multi)
       return this.handleError()
     }
-    return this.handleMultiItemSuccess(this.plural, allFaqs)
+    return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
-  async getFaqById({ id }) {
+  async getById({ id }) {
     const faq = await FAQs.findById(id)
     if (faq == null) {
       this.error = this.errors.notFound(this.typenames.single)
@@ -33,7 +32,7 @@ class FaqResolver extends BaseResolver {
 
     return this.handleSingleItemSuccess(faq)
   }
-  async createFaq({ question, answer }) {
+  async create({ question, answer }) {
     const faq = await FAQs.findOne({ question })
     if (faq !== null) {
       this.error = this.errors.duplicateItem(this.typenames.single)
@@ -42,10 +41,9 @@ class FaqResolver extends BaseResolver {
     const newFaq = new FAQs({ question, answer, updatedAt: new Date() })
     await newFaq.save()
     const allFaqs = await FAQs.find()
-    this.typename = this.typenames.multi
-    return this.handleMultiItemSuccess(this.plural, allFaqs)
+    return this.handleMultiItemSuccess(this.typenames.multi, allFaqs)
   }
-  async editFaq({ id, question, answer }) {
+  async edit({ id, question, answer }) {
     const faq = await FAQs.findById(id)
     if (faq == null) {
       this.error = this.errors.notFound(this.typenames.single)
@@ -56,13 +54,12 @@ class FaqResolver extends BaseResolver {
       { _id: id },
       { question, answer, updatedAt: new Date() }
     )
-    return this.handleMultiItemSuccess(this.plural, await FAQs.find())
+    return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
-  async deleteFaq({ id }) {
+  async delete({ id }) {
     await FAQs.findOneAndDelete(id)
-    this.typename = this.typenames.multi
-    return this.handleMultiItemSuccess(this.plural, await FAQs.find())
+    return this.handleMultiItemSuccess(this.typenames.multi, await FAQs.find())
   }
 }
 
-export default FaqResolver
+export default FaqController

@@ -2,7 +2,7 @@ import BaseResolver from '../../baseResolver.js'
 import User from '../../../models/User.js'
 import { TIERS_MAP } from '../../../utils/user/tiers.js'
 
-class UserResolver extends BaseResolver {
+class UserController extends BaseResolver {
   constructor() {
     super()
     this.addedErrors = {
@@ -18,14 +18,14 @@ class UserResolver extends BaseResolver {
     this.errors = { ...this.errors, ...this.addedErrors }
     this.typenames = {
       single: 'User',
-      multi: 'MultiUsersSuccess'
+      multi: 'Users'
     }
   }
 
   catchError(action) {
     return this.catchError(action)
   }
-  async getAllUsers() {
+  async getAll() {
     const allUsers = await User.find()
     if (allUsers?.length == 0) {
       this.error = this.errors.noUsersFound()
@@ -33,7 +33,7 @@ class UserResolver extends BaseResolver {
     }
     return this.handleMultiItemSuccess('users', allUsers)
   }
-  async getUser({ email }) {
+  async getByEmail({ email }) {
     const user = await User.findOne({ email })
     if (user == null) {
       this.error = this.errors.userNotFound()
@@ -52,7 +52,6 @@ class UserResolver extends BaseResolver {
       user.lastLogin = new Date()
       user.newUser = false
       const saved = await user.save()
-      this.typename = this.typenames.single
       return this.handleSingleItemSuccess(saved)
     } else {
       const [firstName, lastName] = fullName?.split(' ') ?? ['', '']
@@ -67,20 +66,18 @@ class UserResolver extends BaseResolver {
         tier: TIERS_MAP.get(1)
       })
       const saved = await newUser.save()
-      this.typename = this.typenames.single
       return this.handleSingleItemSuccess(saved)
     }
   }
-  async deleteProfile(email) {
+  async delete(email) {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound
       return this.handleError()
     }
     const res = await User.findOneAndDelete({ email })
-    this.typename = this.typenames.single
     return this.handleSingleItemSuccess(res)
   }
 }
 
-export default UserResolver
+export default UserController

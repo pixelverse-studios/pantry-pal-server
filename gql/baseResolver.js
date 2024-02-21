@@ -1,4 +1,5 @@
 import { FormValidations } from '../utils/validations/form.js'
+import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
 import User from '../models/User.js'
 
 class BaseResolver {
@@ -8,10 +9,12 @@ class BaseResolver {
     this.errors = {}
     this.addedErrors = null
     this.catchErrorType = 'failure'
-    this.typename = ''
     this.typenames = { single: '', multi: '' }
     this.validations = {
       form: FormValidations
+    }
+    this.formatters = {
+      date: { dateToLocal, dateToUTC }
     }
     this.payload = null
     this.schemas = { User }
@@ -63,7 +66,7 @@ class BaseResolver {
   buildPayload(params, source) {
     const payload = {}
     Object.entries(params).forEach(([key, value]) => {
-      if (value !== source[key]) {
+      if (value !== source[key] && value !== null) {
         payload[key] = value
       }
     })
