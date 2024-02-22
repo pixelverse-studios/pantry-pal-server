@@ -20,6 +20,14 @@ class BaseResolver {
     this.schemas = { User }
 
     const baseErrors = {
+      noUsersFound: () => ({
+        type: 'noUsersFound',
+        message: () => 'No users found'
+      }),
+      userNotFound: () => ({
+        type: 'userNotFound',
+        message: () => 'User not found'
+      }),
       notFound: item => ({
         type: 'notFound',
         message: `${item} not found`
@@ -57,10 +65,11 @@ class BaseResolver {
       ...values._doc
     }
   }
-  handleMultiItemSuccess(key, values) {
+  handleMultiItemSuccess(values) {
+    const { multi } = this.typenames
     return {
-      __typename: this.typenames.multi,
-      [key]: values
+      __typename: multi,
+      [multi]: values
     }
   }
   buildPayload(params, source) {

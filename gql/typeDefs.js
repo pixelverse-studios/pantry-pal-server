@@ -35,6 +35,17 @@ const typeDefs = gql`
     # errors: [InputFieldError]
   }
 
+  type RecipeCategory {
+    _id: ID!
+    category: String
+  }
+  union RecipeCategoryItem = RecipeCategory | Errors
+
+  type RecipeCategories {
+    categories: [RecipeCategoryItem]
+  }
+  union RecipeCategoryItems = RecipeCategories | Errors
+
   type User {
     _id: ID!
     email: String
@@ -50,7 +61,7 @@ const typeDefs = gql`
   union UserItem = User | Errors
 
   type Users {
-    users: [User]
+    Users: [User]
   }
   union UserItems = Users | Errors
 
@@ -91,6 +102,16 @@ const typeDefs = gql`
     getAllUsers: UserItems!
     getUser(email: String!): UserItem
 
+    # Common Categories
+    getAllCommonCategories: RecipeCategoryItems
+    getCommonCategoryById(recipeID: ID!): RecipeCategoryItem
+    getCommonCategoryByLabel(label: String!): RecipeCategoryItem
+
+    # Custom Categories (USER RELATED)
+    getAllCustomCategories: RecipeCategoryItems
+    getCustomCategoryById(userId: ID!, recipeID: ID!): RecipeCategoryItem
+    getCustomCategoryByLabel(userId: ID!, label: String!): RecipeCategoryItem
+
     # FAQs
     getFaqs: FaqItems
     getFaqById(id: ID!): FaqItem
@@ -108,6 +129,47 @@ const typeDefs = gql`
       providerId: String
     ): UserItem
     deleteProfile(email: String!): UserItem
+
+    # Common Categories
+    createCommonCategory(label: String!): RecipeCategoryItems
+    addBulkCommonCategories(labels: [String!]!): RecipeCategoryItems
+    editCommonCategoryById(
+      categoryId: String!
+      newLabel: String!
+    ): RecipeCategoryItems
+    deleteCommonCategoryById(categoryId: String!): RecipeCategoryItems
+    deleteBulkCommonCategories(categoryIds: [String!]!): RecipeCategoryItems
+
+    # Custom Categories (USER RELATED)
+    createCustomCategory(userId: ID!, label: String!): RecipeCategoryItems
+    addBulkCustomCategories(
+      userId: ID!
+      labels: [String!]!
+    ): RecipeCategoryItems
+    editCustomCategoryById(
+      userId: ID!
+      categoryId: String!
+      newLabel: String!
+    ): RecipeCategoryItems
+    deleteCustomCategoryById(
+      userId: ID!
+      categoryId: String!
+    ): RecipeCategoryItems
+    deleteBulkCustomCategories(
+      userId: ID!
+      categoryIds: [String!]!
+    ): RecipeCategoryItems
+
+    # createRecipe(
+    #   userId: ID!
+    #   ingredients: [String!]!
+    #   instructions: [String!]!
+    #   cookingMethod: String!
+    #   allergies: [String]
+    #   category: RecipeCategory
+    #   author: String
+    # ): RecipeCategoryItems
+
     # FAQs
     createFaq(question: String!, answer: String!): FaqItems
     editFaq(id: ID!, question: String, answer: String): FaqItems
