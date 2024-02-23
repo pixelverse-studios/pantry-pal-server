@@ -31,6 +31,7 @@ const Mutations = {
     try {
       return await controller.createOne(payload)
     } catch (error) {
+      console.log(error)
       return handleError('creating new recipe category')
     }
   },

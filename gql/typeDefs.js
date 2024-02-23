@@ -37,12 +37,14 @@ const typeDefs = gql`
 
   type RecipeCategory {
     _id: ID!
-    category: String
+    label: String
+    createdAt: Date
+    updatedAt: Date
   }
   union RecipeCategoryItem = RecipeCategory | Errors
 
   type RecipeCategories {
-    categories: [RecipeCategoryItem]
+    RecipeCategories: [RecipeCategory]
   }
   union RecipeCategoryItems = RecipeCategories | Errors
 

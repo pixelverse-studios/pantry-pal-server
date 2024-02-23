@@ -24,7 +24,17 @@ class CommonCategoryController extends BaseResolver {
   }
   async getById() {}
   async getByLabel() {}
-  async createOne() {}
+  async createOne({ label }) {
+    const category = await CommonCategory.findOne({ label })
+    if (category != null) {
+      this.error = this.errors.duplicateItem(this.typenames.single)
+      return this.handleError()
+    }
+    const newCategory = new CommonCategory({ label, updatedAt: new Date() })
+    await newCategory.save()
+    const allCats = await CommonCategory.find()
+    return this.handleMultiItemSuccess(allCats)
+  }
   async createBulk() {}
   async edit() {}
   async deleteOne() {}
