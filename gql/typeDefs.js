@@ -48,6 +48,13 @@ const typeDefs = gql`
   }
   union RecipeCategoryItems = RecipeCategories | Errors
 
+  type BulkRecipeCategories {
+    all: [RecipeCategory]
+    failed: [String]
+    succeeded: [String]
+  }
+  union BulkRecipeCategoryItems = BulkRecipeCategories | Errors
+
   type User {
     _id: ID!
     email: String
@@ -106,12 +113,12 @@ const typeDefs = gql`
 
     # Common Categories
     getAllCommonCategories: RecipeCategoryItems
-    getCommonCategoryById(recipeID: ID!): RecipeCategoryItem
+    getCommonCategoryById(id: ID!): RecipeCategoryItem
     getCommonCategoryByLabel(label: String!): RecipeCategoryItem
 
     # Custom Categories (USER RELATED)
     getAllCustomCategories: RecipeCategoryItems
-    getCustomCategoryById(userId: ID!, recipeID: ID!): RecipeCategoryItem
+    getCustomCategoryById(userId: ID!, id: ID!): RecipeCategoryItem
     getCustomCategoryByLabel(userId: ID!, label: String!): RecipeCategoryItem
 
     # FAQs
@@ -134,13 +141,13 @@ const typeDefs = gql`
 
     # Common Categories
     createCommonCategory(label: String!): RecipeCategoryItems
-    addBulkCommonCategories(labels: [String!]!): RecipeCategoryItems
-    editCommonCategoryById(
-      categoryId: String!
-      newLabel: String!
-    ): RecipeCategoryItems
-    deleteCommonCategoryById(categoryId: String!): RecipeCategoryItems
-    deleteBulkCommonCategories(categoryIds: [String!]!): RecipeCategoryItems
+    addBulkCommonCategories(labels: [String!]!): BulkRecipeCategoryItems
+    editCommonCategoryById(id: ID!, newLabel: String!): RecipeCategoryItems
+    deleteCommonCategoryById(id: ID!): RecipeCategoryItems
+    deleteBulkCommonCategoriesById(ids: [ID!]!): BulkRecipeCategoryItems
+    deleteBulkCommonCategoriesByLabel(
+      labels: [String!]!
+    ): BulkRecipeCategoryItems
 
     # Custom Categories (USER RELATED)
     createCustomCategory(userId: ID!, label: String!): RecipeCategoryItems
@@ -150,16 +157,13 @@ const typeDefs = gql`
     ): RecipeCategoryItems
     editCustomCategoryById(
       userId: ID!
-      categoryId: String!
+      id: String!
       newLabel: String!
     ): RecipeCategoryItems
-    deleteCustomCategoryById(
-      userId: ID!
-      categoryId: String!
-    ): RecipeCategoryItems
+    deleteCustomCategoryById(userId: ID!, id: String!): RecipeCategoryItems
     deleteBulkCustomCategories(
       userId: ID!
-      categoryIds: [String!]!
+      ids: [String!]!
     ): RecipeCategoryItems
 
     # createRecipe(

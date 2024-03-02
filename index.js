@@ -57,12 +57,16 @@ async function startApolloServer() {
     resolvers: { Query, Mutation, Date: dateScalar },
     context: async ({ req }) => {
       const token = req.headers?.authorization
-      if (token) {
-        console.log(token)
-        // return { req, user }
-        return { req }
+      // if (token) {
+      //   // return { req, user }
+      //   return { req }
+      // }
+      // TODO: add user in place of true
+      return {
+        req,
+        user: token != null ? true : null,
+        operation: req.body.operationName
       }
-      return { req, user: null }
     },
     plugins: [...apollogPlugins],
     introspection: !isProduction

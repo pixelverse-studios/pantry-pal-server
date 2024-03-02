@@ -1,68 +1,112 @@
+import { Topic } from '../../../utils/logger.js'
 import CommonCategoryController from './CommonCategoryController.js'
+
+const topic = Topic.CommonCategory
 const controller = new CommonCategoryController()
-const handleError = reason => controller.catchError(reason)
 
 const Queries = {
-  async getAllCommonCategories(_, payload) {
+  async getAllCommonCategories(_, __, ctx) {
     try {
-      return await controller.getAll(payload)
+      return await controller.getAll(ctx)
     } catch (error) {
-      return handleError('fetching users recipe categories')
+      return controller.catchError(
+        'fetching common recipe categories',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async getCommonCategoryById(_, payload) {
+  async getCommonCategoryById(_, payload, ctx) {
     try {
-      return await controller.getById(payload)
+      return await controller.getById(payload, ctx)
     } catch (error) {
-      return handleError('fetching that recipe category')
+      return controller.catchError(
+        'fetching that recipe category',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async getCommonCategoryByLabel(_, payload) {
+  async getCommonCategoryByLabel(_, payload, ctx) {
     try {
-      return await controller.getByLabel(payload)
+      return await controller.getByLabel(payload, ctx)
     } catch (error) {
-      return handleError('fetching that recipe category')
+      return controller.catchError(
+        'fetching that recipe category',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   }
 }
 
 const Mutations = {
-  async createCommonCategory(_, payload) {
+  async createCommonCategory(_, payload, ctx) {
     try {
-      return await controller.createOne(payload)
+      return await controller.createOne(payload, ctx)
     } catch (error) {
-      console.log(error)
-      return handleError('creating new recipe category')
+      return controller.catchError(
+        'creating new recipe category',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async addBulkCommonCategories(_, payload) {
+  async addBulkCommonCategories(_, payload, ctx) {
     try {
-      return await controller.createBulk(payload)
+      return await controller.createBulk(payload, ctx)
     } catch (error) {
-      return handleError('creating bulk categories')
+      return controller.catchError(
+        'creating bulk categories',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async editCommonCategoryById(_, payload) {
+  async editCommonCategoryById(_, payload, ctx) {
     try {
-      return await controller.edit(payload)
+      return await controller.edit(payload, ctx)
     } catch (error) {
-      return handleError('editing category')
+      return controller.catchError(
+        'editing category',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async deleteCommonCategoryById(_, payload) {
+  async deleteCommonCategoryById(_, payload, ctx) {
     try {
-      return await controller.deleteOne(payload)
+      return await controller.deleteOne(payload, ctx)
     } catch (error) {
-      return handleError('deleting category')
+      return controller.catchError(
+        'deleting category',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
   },
-  async deleteBulkCommonCategories(_, payload) {
+  async deleteBulkCommonCategoriesById(_, payload, ctx) {
     try {
-      return await controller.deleteBulk(payload)
+      return await controller.deleteBulkById(payload, ctx)
     } catch (error) {
-      return handleError('deleting categories')
+      return controller.catchError(
+        'bulk deleting categories by id',
+        { topic, operation: ctx.operation },
+        error
+      )
     }
-  }
+  },
+  async deleteBulkCommonCategoriesByLabel(_, payload, ctx) {
+    try {
+      return await controller.deleteBulkByLabel(payload, ctx)
+    } catch (error) {
+      return controller.catchError(
+        'bulk deleting categories by label',
+        { topic, operation: ctx.operation },
+        error
+      )
+    }
+  },
 }
 
 export default { Queries, Mutations }

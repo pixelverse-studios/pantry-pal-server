@@ -1,5 +1,7 @@
 import { FormValidations } from '../utils/validations/form.js'
+import * as StringValidations from '../utils/validations/stringUtils.js'
 import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
+import { logWarning } from '../utils/logger.js'
 import User from '../models/User.js'
 
 class BaseResolver {
@@ -11,7 +13,8 @@ class BaseResolver {
     this.catchErrorType = 'failure'
     this.typenames = { single: '', multi: '' }
     this.validations = {
-      form: FormValidations
+      form: FormValidations,
+      string: StringValidations
     }
     this.formatters = {
       date: { dateToLocal, dateToUTC }
@@ -53,7 +56,8 @@ class BaseResolver {
       message: `There was an issue ${action}. Please try again`
     }
   }
-  handleError() {
+  handleError(topic, operation, details) {
+    logWarning(topic, operation, details)
     return {
       __typename: 'Errors',
       ...this.error
