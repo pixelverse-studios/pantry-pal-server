@@ -1,4 +1,4 @@
-import BaseResolver from '../../baseResolver.js'
+import BaseResolver from '../../../baseResolver.js'
 
 class CustomCategoryController extends BaseResolver {
   constructor() {

@@ -1,5 +1,5 @@
-import { Topic } from '../../../utils/logger.js'
-import CommonCategoryController from './CommonCategoryController.js'
+import { Topic } from '../../../../utils/logger.js'
+import CommonCategoryController from './controller.js'
 
 const topic = Topic.CommonCategory
 const controller = new CommonCategoryController()
@@ -76,10 +76,21 @@ const Mutations = {
   },
   async deleteCommonCategoryById(_, payload, ctx) {
     try {
-      return await controller.deleteOne(payload, ctx)
+      return await controller.deleteOneById(payload, ctx)
     } catch (error) {
       return controller.catchError(
-        'deleting category',
+        'deleting category by id',
+        { topic, operation: ctx.operation },
+        error
+      )
+    }
+  },
+  async deleteCommonCategoryByLabel(_, payload, ctx) {
+    try {
+      return await controller.deleteOneByLabel(payload, ctx)
+    } catch (error) {
+      return controller.catchError(
+        'deleting category by label',
         { topic, operation: ctx.operation },
         error
       )
@@ -106,7 +117,7 @@ const Mutations = {
         error
       )
     }
-  },
+  }
 }
 
 export default { Queries, Mutations }

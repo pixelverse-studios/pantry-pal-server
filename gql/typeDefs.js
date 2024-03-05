@@ -35,6 +35,10 @@ const typeDefs = gql`
     # errors: [InputFieldError]
   }
 
+  # type MutationResponse {
+  #   status: Boolean
+  # }
+
   type RecipeCategory {
     _id: ID!
     label: String
@@ -144,6 +148,7 @@ const typeDefs = gql`
     addBulkCommonCategories(labels: [String!]!): BulkRecipeCategoryItems
     editCommonCategoryById(id: ID!, newLabel: String!): RecipeCategoryItems
     deleteCommonCategoryById(id: ID!): RecipeCategoryItems
+    deleteCommonCategoryByLabel(label: String!): RecipeCategoryItems
     deleteBulkCommonCategoriesById(ids: [ID!]!): BulkRecipeCategoryItems
     deleteBulkCommonCategoriesByLabel(
       labels: [String!]!

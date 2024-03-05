@@ -16,13 +16,15 @@ export const Topic = {
 }
 
 export const Command = {
-    Add: 'Processing ADD of',
-    Edit: 'Processing EDIT of',
-    Delete: 'Proccessing DELETE of'
+  Add: 'Processing ADD of',
+  Edit: 'Processing EDIT of',
+  Delete: 'Proccessing DELETE of',
+  Delete_Ids: 'Processing DELETE of IDs: ',
+  Delete_Labels: 'Processing DELETE of Labels: '
 }
 
 const logMessage = (topic, level, operation, ...args) => {
-  const now = new Date()
+  const now = Date.now()
   console.log(`${level.label} [${topic}] @ ${dateToLocal(now)}`)
   console.log(`Operation ${operation}: ${args}`)
 }

@@ -47,7 +47,7 @@ class PatchNotesController extends BaseResolver {
       targetDate: targetDate != null ? dateToUTC(targetDate) : null,
       targetVersion,
       graphic,
-      updatedAt: dateToUTC(new Date())
+      updatedAt: Date.now()
     })
     await newNote.save()
     const allNotes = await PatchNotes.find()
@@ -61,13 +61,11 @@ class PatchNotesController extends BaseResolver {
     }
 
     this.buildPayload({ ...rest }, note)
-    const { dateToUTC } = this.formatters.date
-
     await PatchNotes.findOneAndUpdate(
       { _id: id },
       {
         ...this.payload,
-        updatedAt: dateToUTC(new Date())
+        updatedAt: Date.now()
       }
     )
     return this.handleMultiItemSuccess(await PatchNotes.find())
@@ -89,12 +87,11 @@ class PatchNotesController extends BaseResolver {
       return this.handleError()
     }
     this.buildPayload({ ...rest }, note)
-    const { dateToUTC } = this.formatters.date
     await PatchNotes.findByIdAndUpdate(
       { _id: id },
       {
         ...this.payload,
-        updatedAt: dateToUTC(new Date())
+        updatedAt: Date.now()
       }
     )
     return this.handleMultiItemSuccess(await PatchNotes.find())

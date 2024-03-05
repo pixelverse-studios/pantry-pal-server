@@ -38,7 +38,7 @@ class FaqController extends BaseResolver {
       this.error = this.errors.duplicateItem(this.typenames.single)
       return this.handleError()
     }
-    const newFaq = new FAQs({ question, answer, updatedAt: new Date() })
+    const newFaq = new FAQs({ question, answer, updatedAt: Date.now() })
     await newFaq.save()
     const allFaqs = await FAQs.find()
     return this.handleMultiItemSuccess(allFaqs)
@@ -52,7 +52,7 @@ class FaqController extends BaseResolver {
 
     await FAQs.findOneAndUpdate(
       { _id: id },
-      { question, answer, updatedAt: new Date() }
+      { question, answer, updatedAt: Date.now() }
     )
     return this.handleMultiItemSuccess(await FAQs.find())
   }

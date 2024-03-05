@@ -38,7 +38,7 @@ class UserController extends BaseResolver {
 
     const user = await User.findOne({ email })
     if (user !== null) {
-      user.lastLogin = new Date()
+      user.lastLogin = Date.now()
       user.newUser = false
       const saved = await user.save()
       return this.handleSingleItemSuccess(saved)
@@ -50,7 +50,7 @@ class UserController extends BaseResolver {
         lastName,
         avatar,
         providerId,
-        lastLogin: new Date(),
+        lastLogin: Date.now(),
         newUser: true,
         tier: TIERS_MAP.get(1)
       })
