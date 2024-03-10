@@ -188,6 +188,7 @@ const typeDefs = gql`
       ids: [String!]!
     ): BulkRecipeCategoryItems
     deleteBulkCustomCategoriesByLabel(
+      userId: ID!
       labels: [String!]!
     ): BulkRecipeCategoryItems
 

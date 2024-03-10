@@ -47,7 +47,7 @@ class CustomCategoryController extends BaseResolver {
     const { string } = this.validations
     return flattened.some(category => string.isMatching(item, category))
   }
-  
+
   async getAllForUser({ userId }) {
     const allCommon = await CommonCategory.find()
     const transformedCommons = this.mapCategories(allCommon, 'Common')
@@ -104,7 +104,7 @@ class CustomCategoryController extends BaseResolver {
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,
-        `Recipe ${label} could not be created`
+        `Recipe ${label} already exists`
       )
     }
     const newCategory = new CustomCategory({
@@ -126,30 +126,27 @@ class CustomCategoryController extends BaseResolver {
         'No labels were provided for bulk creating categories'
       )
     }
-    const allCommon = await CommonCategory.find()
     const existingCustom = await CustomCategory.find()
 
     const failed = []
     const succeeded = []
 
     for await (const label of labels) {
-      const existsInCommon = allCommon.some(item =>
-        string.isMatching(label, item.label)
-      )
+      const existsInCommon = await this.checkAgainstCommon(label)
       const alreadyExists = existingCustom.some(item =>
         string.isMatching(label, item.label)
       )
       if (alreadyExists || existsInCommon) {
         failed.push(label)
-        break
+      } else {
+        const newCategory = CustomCategory({
+          label,
+          updatedAt: Date.now(),
+          userId
+        })
+        await newCategory.save()
+        succeeded.push(newCategory.label)
       }
-      const newCategory = CustomCategory({
-        label,
-        updatedAt: Date.now(),
-        userId
-      })
-      await newCategory.save()
-      succeeded.push(newCategory.label)
     }
 
     const allCategories = await CustomCategory.find()
@@ -158,7 +155,7 @@ class CustomCategoryController extends BaseResolver {
       this.typenames.bulk
     )
   }
-  async edit({ id, newLabel }, ctx) {
+  async edit({ id, userId, newLabel }, ctx) {
     logInfo(
       Topic.CustomCategory,
       ctx.operation,
@@ -169,20 +166,31 @@ class CustomCategoryController extends BaseResolver {
       this.error = this.errors.notFound(this.typenames.single)
       return this.handleError()
     }
+    const existsInCommon = await this.checkAgainstCommon(newLabel)
+    const currentCustoms = await CustomCategory.find({ userId })
+    const isDupe = currentCustoms.some(item => item.label === newLabel)
+    if (isDupe || existsInCommon) {
+      this.error = this.errors.duplicateItem(this.typenames.single)
+      return this.handleError(
+        Topic.CustomCategory,
+        ctx.operation,
+        `Recipe ${newLabel} already exists`
+      )
+    }
 
     await CustomCategory.findOneAndUpdate(
-      { _id: id },
+      { _id: id, userId },
       { label: newLabel, updatedAt: Date.now() }
     )
     return this.handleMultiItemSuccess(await CustomCategory.find())
   }
-  async deleteOneById({ id }, ctx) {
+  async deleteOneById({ id, userId }, ctx) {
+    const category = await CustomCategory.findOne({ _id: id, userId })
     logInfo(
       Topic.CustomCategory,
       ctx.operation,
       `${Command.Delete} ${category._id} | ${category.label}`
     )
-    const category = await CustomCategory.findById(id)
     if (category == null) {
       this.error = this.errors.notFound(this.typenames.single)
       return this.handleError(Topic.CustomCategory)
@@ -191,13 +199,13 @@ class CustomCategoryController extends BaseResolver {
     const remainingCategories = await CustomCategory.find()
     return this.handleMultiItemSuccess(remainingCategories)
   }
-  async deleteOneByLabel({ label }, ctx) {
+  async deleteOneByLabel({ label, userId }, ctx) {
+    const category = await CustomCategory.findOne({ label, userId })
     logInfo(
       Topic.CustomCategory,
       ctx.operation,
       `${Command.Delete} ${category._id} | ${category.label}`
     )
-    const category = await CustomCategory.findOne({ label })
     if (category == null) {
       this.error = this.errors.notFound(this.typenames.single)
       return this.handleError(Topic.CustomCategory)
@@ -206,13 +214,13 @@ class CustomCategoryController extends BaseResolver {
     const remainingCategories = await CustomCategory.find()
     return this.handleMultiItemSuccess(remainingCategories)
   }
-  async deleteBulkById({ ids }, ctx) {
+  async deleteBulkById({ ids, userId }, ctx) {
     logInfo(
       Topic.CustomCategory,
       ctx.operation,
       `${Command.Delete_Ids} ${ids.toString()}`
     )
-    const all = await CustomCategory.find()
+    const all = await CustomCategory.find({ userId })
     const failed = []
     const succeeded = []
 
@@ -245,14 +253,14 @@ class CustomCategoryController extends BaseResolver {
       this.typenames.bulk
     )
   }
-  async deleteBulkByLabel({ labels }, ctx) {
+  async deleteBulkByLabel({ labels, userId }, ctx) {
     const { string } = this.validations
     logInfo(
       Topic.CustomCategory,
       ctx.operation,
       `${Command.Delete_Labels} ${labels.toString()}`
     )
-    const all = await CustomCategory.find()
+    const all = await CustomCategory.find({ userId })
     const failed = []
     const succeeded = []
 

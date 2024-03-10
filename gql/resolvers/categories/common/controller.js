@@ -96,18 +96,17 @@ class CommonCategoryController extends BaseResolver {
 
     const failed = []
     const succeeded = []
-
     for await (const label of labels) {
       const alreadyExists = existing.some(item =>
         string.isMatching(label, item.label)
       )
       if (alreadyExists) {
         failed.push(label)
-        break
+      } else {
+        const newCategory = CommonCategory({ label, updatedAt: Date.now() })
+        await newCategory.save()
+        succeeded.push(newCategory.label)
       }
-      const newCategory = CommonCategory({ label, updatedAt: Date.now() })
-      await newCategory.save()
-      succeeded.push(newCategory.label)
     }
 
     const allCategories = await CommonCategory.find()
