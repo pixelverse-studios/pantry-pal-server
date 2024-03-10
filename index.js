@@ -30,9 +30,7 @@ const dateScalar = new GraphQLScalarType({
 })
 
 const port = process.env.PORT ?? 5050
-const DB_URL =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.xeutukt.mongodb.net/?retryWrites=true&w=majority` ??
-  ''
+const DB_URL = process.env.DB_CONNECT_URL ?? ''
 
 async function startDB() {
   await connect(DB_URL)

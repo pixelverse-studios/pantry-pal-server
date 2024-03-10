@@ -59,6 +59,18 @@ const typeDefs = gql`
   }
   union BulkRecipeCategoryItems = BulkRecipeCategories | Errors
 
+  type UsersCategory {
+    _id: ID
+    label: String
+    src: String
+    createdAt: Date
+    updatedAt: Date
+  }
+  type UsersCategories {
+    UsersCategories: [UsersCategory]
+  }
+  union UsersCategoriesItems = UsersCategories | Errors
+
   type User {
     _id: ID!
     email: String
@@ -125,6 +137,7 @@ const typeDefs = gql`
     getCustomCategoryById(userId: ID!, id: ID!): RecipeCategoryItem
     getCustomCategoryByLabel(userId: ID!, label: String!): RecipeCategoryItem
 
+    getAllUserCategories(userId: ID!): UsersCategoriesItems
     # FAQs
     getFaqs: FaqItems
     getFaqById(id: ID!): FaqItem
@@ -159,17 +172,24 @@ const typeDefs = gql`
     addBulkCustomCategories(
       userId: ID!
       labels: [String!]!
-    ): RecipeCategoryItems
+    ): BulkRecipeCategoryItems
     editCustomCategoryById(
       userId: ID!
       id: String!
       newLabel: String!
     ): RecipeCategoryItems
     deleteCustomCategoryById(userId: ID!, id: String!): RecipeCategoryItems
-    deleteBulkCustomCategories(
+    deleteCustomCategoryByLabel(
+      userId: ID!
+      label: String!
+    ): RecipeCategoryItems
+    deleteBulkCustomCategoriesById(
       userId: ID!
       ids: [String!]!
-    ): RecipeCategoryItems
+    ): BulkRecipeCategoryItems
+    deleteBulkCustomCategoriesByLabel(
+      labels: [String!]!
+    ): BulkRecipeCategoryItems
 
     # createRecipe(
     #   userId: ID!

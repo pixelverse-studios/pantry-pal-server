@@ -12,7 +12,8 @@ export const Topic = {
   CustomCategory: 'custom-category',
   Faqs: 'faqs',
   PatchNotes: 'patch-notes',
-  User: 'user'
+  User: 'user',
+  User_Categories: 'user-categories'
 }
 
 export const Command = {
@@ -20,7 +21,8 @@ export const Command = {
   Edit: 'Processing EDIT of',
   Delete: 'Proccessing DELETE of',
   Delete_Ids: 'Processing DELETE of IDs: ',
-  Delete_Labels: 'Processing DELETE of Labels: '
+  Delete_Labels: 'Processing DELETE of Labels: ',
+  Fetch: 'Fetching '
 }
 
 const logMessage = (topic, level, operation, ...args) => {

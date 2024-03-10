@@ -69,11 +69,11 @@ class BaseResolver {
       ...values._doc
     }
   }
-  handleMultiItemSuccess(values) {
+  handleMultiItemSuccess(values, typenameOverride) {
     const { multi } = this.typenames
     return {
-      __typename: multi,
-      [multi]: values
+      __typename: typenameOverride ?? multi,
+      [typenameOverride ?? multi]: values
     }
   }
   buildPayload(params, source) {

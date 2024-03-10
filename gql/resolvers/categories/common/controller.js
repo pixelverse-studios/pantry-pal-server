@@ -128,11 +128,10 @@ class CommonCategoryController extends BaseResolver {
       return this.handleError()
     }
 
-    const res = await CommonCategory.findOneAndUpdate(
+    await CommonCategory.findOneAndUpdate(
       { _id: id },
       { label: newLabel, updatedAt: Date.now() }
     )
-    console.log('res; ', res)
     return this.handleMultiItemSuccess(await CommonCategory.find())
   }
   async deleteOneById({ id }, ctx) {
