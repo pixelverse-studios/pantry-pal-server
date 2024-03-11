@@ -16,26 +16,38 @@ class UserController extends BaseResolver {
     logError(topic, operation, error)
     return this.catchError(action)
   }
-  async getAll() {
+  async getAll(ctx) {
     const allUsers = await User.find()
     if (allUsers?.length == 0) {
       this.error = this.errors.noUsersFound()
-      return this.handleError()
+      return this.handleError(
+        Topic.User,
+        ctx.operation,
+        `No users found on the system`
+      )
     }
     return this.handleMultiItemSuccess(allUsers)
   }
-  async getByEmail({ email }) {
+  async getByEmail({ email }, ctx) {
     const user = await User.findOne({ email })
     if (user == null) {
       this.error = this.errors.userNotFound()
-      return this.handleError()
+      return this.handleError(
+        Topic.User,
+        ctx.operation,
+        `User ${email} not found`
+      )
     }
     return this.handleSingleItemSuccess(user)
   }
   async signIn({ email, fullName, avatar, providerId }, ctx) {
     if (!email) {
       this.error = this.errors.userNotFound
-      return this.handleError()
+      return this.handleError(
+        Topic.User,
+        ctx.operation,
+        `No email provided for signin`
+      )
     }
 
     const user = await User.findOne({ email })
@@ -69,7 +81,11 @@ class UserController extends BaseResolver {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound
-      return this.handleError()
+      return this.handleError(
+        Topic.User,
+        ctx.operation,
+        `User ${email} not found`
+      )
     }
     logInfo(Topic.User, ctx.operation, `${Command.Delete} User ${email}`)
     const res = await User.findOneAndDelete({ email })

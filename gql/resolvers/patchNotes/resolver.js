@@ -6,7 +6,7 @@ const topic = Topic.PatchNotes
 const Queries = {
   async getAllPatchNotes(_, __, ctx) {
     try {
-      return await controller.getAll()
+      return await controller.getAll(ctx)
     } catch (error) {
       controller.catchError('fetching Patch Notes', {
         topic,
