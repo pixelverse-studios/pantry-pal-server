@@ -1,5 +1,6 @@
 import BaseResolver from '../../baseResolver.js'
 import User from '../../../models/User.js'
+import { Command, Topic, logError, logInfo } from '../../../utils/logger.js'
 import { TIERS_MAP } from '../../../utils/user/tiers.js'
 
 class UserController extends BaseResolver {
@@ -11,7 +12,8 @@ class UserController extends BaseResolver {
     }
   }
 
-  catchError(action) {
+  catchError(action, { topic, operation }, error) {
+    logError(topic, operation, error)
     return this.catchError(action)
   }
   async getAll() {
@@ -30,7 +32,7 @@ class UserController extends BaseResolver {
     }
     return this.handleSingleItemSuccess(user)
   }
-  async signIn({ email, fullName, avatar, providerId }) {
+  async signIn({ email, fullName, avatar, providerId }, ctx) {
     if (!email) {
       this.error = this.errors.userNotFound
       return this.handleError()
@@ -38,6 +40,12 @@ class UserController extends BaseResolver {
 
     const user = await User.findOne({ email })
     if (user !== null) {
+      logInfo(
+        Topic.User,
+        ctx.operation,
+        `${Command.Register} ${email} from ${providerId}`
+      )
+
       user.lastLogin = Date.now()
       user.newUser = false
       const saved = await user.save()
@@ -58,12 +66,13 @@ class UserController extends BaseResolver {
       return this.handleSingleItemSuccess(saved)
     }
   }
-  async delete(email) {
+  async delete({ email }, ctx) {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound
       return this.handleError()
     }
+    logInfo(Topic.User, ctx.operation, `${Command.Delete} User ${email}`)
     const res = await User.findOneAndDelete({ email })
     return this.handleSingleItemSuccess(res)
   }
