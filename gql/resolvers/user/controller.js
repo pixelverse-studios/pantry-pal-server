@@ -40,17 +40,16 @@ class UserController extends BaseResolver {
 
     const user = await User.findOne({ email })
     if (user !== null) {
-      logInfo(
-        Topic.User,
-        ctx.operation,
-        `${Command.Register} ${email} from ${providerId}`
-      )
-
       user.lastLogin = Date.now()
       user.newUser = false
       const saved = await user.save()
       return this.handleSingleItemSuccess(saved)
     } else {
+      logInfo(
+        Topic.User,
+        ctx.operation,
+        `${Command.Register} ${email} from ${providerId}`
+      )
       const [firstName, lastName] = fullName?.split(' ') ?? ['', '']
       const newUser = new User({
         email,
@@ -66,7 +65,7 @@ class UserController extends BaseResolver {
       return this.handleSingleItemSuccess(saved)
     }
   }
-  async delete({ email }, ctx) {
+  async delete(email, ctx) {
     const user = await User.find({ email })
     if (!user) {
       this.error = this.errors.userNotFound

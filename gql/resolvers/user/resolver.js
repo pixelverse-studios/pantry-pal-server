@@ -38,7 +38,7 @@ const Queries = {
 const Mutations = {
   async signIn(_, payload, ctx) {
     try {
-      const res = await controller.signIn(payload)
+      const res = await controller.signIn(payload, ctx)
       return res
     } catch (error) {
       return controller.catchError(
@@ -51,7 +51,7 @@ const Mutations = {
   async deleteProfile(_, payload, ctx) {
     // TODO: Check token before executing request. Build in a development backdoor
     try {
-      const res = await controller.delete(payload.email)
+      const res = await controller.delete(payload.email, ctx)
       return res
     } catch (error) {
       return controller.catchError(
