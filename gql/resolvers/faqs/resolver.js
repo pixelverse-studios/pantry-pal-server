@@ -1,4 +1,4 @@
-import FaqController from './faqController.js'
+import FaqController from './controller.js'
 const controller = new FaqController()
 
 const Queries = {

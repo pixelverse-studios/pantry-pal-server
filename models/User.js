@@ -10,7 +10,7 @@ const userSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   lastLogin: { type: Date },
   newUser: Boolean,
-  tier: String
+  tier: String,
 })
 
 export default model('User', userSchema)

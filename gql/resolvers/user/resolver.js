@@ -1,4 +1,4 @@
-import UserController from './userController.js'
+import UserController from './controller.js'
 const controller = new UserController()
 
 const Queries = {

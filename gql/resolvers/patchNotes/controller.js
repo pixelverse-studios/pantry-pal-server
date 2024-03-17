@@ -21,7 +21,7 @@ class PatchNotesController extends BaseResolver {
       this.error = this.errors.notFound(this.typenames.multi)
       return this.handleError()
     }
-    return this.handleMultiItemSuccess(this.typenames.multi, patchNotes)
+    return this.handleMultiItemSuccess(patchNotes)
   }
   async create({
     title,
@@ -47,11 +47,11 @@ class PatchNotesController extends BaseResolver {
       targetDate: targetDate != null ? dateToUTC(targetDate) : null,
       targetVersion,
       graphic,
-      updatedAt: dateToUTC(new Date())
+      updatedAt: Date.now()
     })
     await newNote.save()
     const allNotes = await PatchNotes.find()
-    return this.handleMultiItemSuccess(this.typenames.multi, allNotes)
+    return this.handleMultiItemSuccess(allNotes)
   }
   async edit({ id, ...rest }) {
     const note = await PatchNotes.findById(id)
@@ -61,19 +61,14 @@ class PatchNotesController extends BaseResolver {
     }
 
     this.buildPayload({ ...rest }, note)
-    const { dateToUTC } = this.formatters.date
-
     await PatchNotes.findOneAndUpdate(
       { _id: id },
       {
         ...this.payload,
-        updatedAt: dateToUTC(new Date())
+        updatedAt: Date.now()
       }
     )
-    return this.handleMultiItemSuccess(
-      this.typenames.multi,
-      await PatchNotes.find()
-    )
+    return this.handleMultiItemSuccess(await PatchNotes.find())
   }
   async delete({ id }) {
     const note = await PatchNotes.findById(id)
@@ -83,10 +78,7 @@ class PatchNotesController extends BaseResolver {
     }
 
     await PatchNotes.findOneAndDelete(id)
-    return this.handleMultiItemSuccess(
-      this.typenames.multi,
-      await PatchNotes.find()
-    )
+    return this.handleMultiItemSuccess(await PatchNotes.find())
   }
   async publish({ id, ...rest }) {
     const note = await PatchNotes.findById(id)
@@ -95,18 +87,14 @@ class PatchNotesController extends BaseResolver {
       return this.handleError()
     }
     this.buildPayload({ ...rest }, note)
-    const { dateToUTC } = this.formatters.date
     await PatchNotes.findByIdAndUpdate(
       { _id: id },
       {
         ...this.payload,
-        updatedAt: dateToUTC(new Date())
+        updatedAt: Date.now()
       }
     )
-    return this.handleMultiItemSuccess(
-      this.typenames.multi,
-      await PatchNotes.find()
-    )
+    return this.handleMultiItemSuccess(await PatchNotes.find())
   }
 }
 

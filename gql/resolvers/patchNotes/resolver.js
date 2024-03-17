@@ -1,4 +1,4 @@
-import PatchNotesController from './patchNotesController.js'
+import PatchNotesController from './controller.js'
 const controller = new PatchNotesController()
 
 const Queries = {

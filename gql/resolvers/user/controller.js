@@ -5,17 +5,6 @@ import { TIERS_MAP } from '../../../utils/user/tiers.js'
 class UserController extends BaseResolver {
   constructor() {
     super()
-    this.addedErrors = {
-      noUsersFound: () => ({
-        type: 'noUsersFound',
-        message: () => 'No users found'
-      }),
-      userNotFound: () => ({
-        type: 'userNotFound',
-        message: () => 'User not found'
-      })
-    }
-    this.errors = { ...this.errors, ...this.addedErrors }
     this.typenames = {
       single: 'User',
       multi: 'Users'
@@ -31,7 +20,7 @@ class UserController extends BaseResolver {
       this.error = this.errors.noUsersFound()
       return this.handleError()
     }
-    return this.handleMultiItemSuccess('users', allUsers)
+    return this.handleMultiItemSuccess(allUsers)
   }
   async getByEmail({ email }) {
     const user = await User.findOne({ email })
@@ -49,7 +38,7 @@ class UserController extends BaseResolver {
 
     const user = await User.findOne({ email })
     if (user !== null) {
-      user.lastLogin = new Date()
+      user.lastLogin = Date.now()
       user.newUser = false
       const saved = await user.save()
       return this.handleSingleItemSuccess(saved)
@@ -61,7 +50,7 @@ class UserController extends BaseResolver {
         lastName,
         avatar,
         providerId,
-        lastLogin: new Date(),
+        lastLogin: Date.now(),
         newUser: true,
         tier: TIERS_MAP.get(1)
       })

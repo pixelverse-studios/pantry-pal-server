@@ -30,9 +30,7 @@ const dateScalar = new GraphQLScalarType({
 })
 
 const port = process.env.PORT ?? 5050
-const DB_URL =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.xeutukt.mongodb.net/?retryWrites=true&w=majority` ??
-  ''
+const DB_URL = process.env.DB_CONNECT_URL ?? ''
 
 async function startDB() {
   await connect(DB_URL)
@@ -57,12 +55,16 @@ async function startApolloServer() {
     resolvers: { Query, Mutation, Date: dateScalar },
     context: async ({ req }) => {
       const token = req.headers?.authorization
-      if (token) {
-        console.log(token)
-        // return { req, user }
-        return { req }
+      // if (token) {
+      //   // return { req, user }
+      //   return { req }
+      // }
+      // TODO: add user in place of true
+      return {
+        req,
+        user: token != null ? true : null,
+        operation: req.body.operationName
       }
-      return { req, user: null }
     },
     plugins: [...apollogPlugins],
     introspection: !isProduction
