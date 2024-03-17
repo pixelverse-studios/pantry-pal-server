@@ -1,5 +1,4 @@
 import { gql } from 'apollo-server'
-// import { dateScalar } from '../..index.js'
 
 const userTypes = gql`
   scalar Date

@@ -8,8 +8,8 @@ import {
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
 
-import typeDefs from './gql/types/index.js'
-import { Query, Mutation } from './gql/resolvers/index.js'
+import typeDefs from './gql/resolvers/typeDefs.js'
+import { Query, Mutation } from './gql/resolvers/resolvers.js'
 import config, { PRODUCTION } from './config.js'
 
 const dateScalar = new GraphQLScalarType({
