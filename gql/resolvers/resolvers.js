@@ -3,13 +3,15 @@ import FaqResolver from './faqs/resolver.js'
 import PatchNotesResolver from './patchNotes/resolver.js'
 import CommonCategoryResolver from './categories/common/resolver.js'
 import CustomCategoryResolver from './categories/custom/resolver.js'
+import FoodResolver from './food/resolver.js'
 
 export const Query = {
   ...UserResolver.Queries,
   ...FaqResolver.Queries,
   ...PatchNotesResolver.Queries,
   ...CommonCategoryResolver.Queries,
-  ...CustomCategoryResolver.Queries
+  ...CustomCategoryResolver.Queries,
+  ...FoodResolver.Queries
 }
 
 export const Mutation = {

@@ -12,7 +12,7 @@ const config = {
   api: {
     food: {
       key: env.SPOON_API_KEY,
-      url: 'https://api.spoonacular.com'
+      baseUrl: 'https://api.spoonacular.com'
     }
   }
 }

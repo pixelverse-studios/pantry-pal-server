@@ -73,7 +73,7 @@ class CustomCategoryController extends BaseResolver {
   async getById({ userId, id }, ctx) {
     const category = await CustomCategory.find({ userId })
     if (category == null) {
-      this.error = this.errors.notFound('Common Category')
+      this.error = this.errors.notFound('Custom Category')
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,
@@ -85,7 +85,7 @@ class CustomCategoryController extends BaseResolver {
   async getByLabel({ userId, label }, ctx) {
     const category = await CustomCategory.findOne({ userId, label })
     if (category == null) {
-      this.error = this.errors.notFound('Common Category')
+      this.error = this.errors.notFound('Custom Category')
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,
@@ -100,7 +100,7 @@ class CustomCategoryController extends BaseResolver {
     const alreadyExists = all.some(item => string.isMatching(label, item.label))
     const existsInCommon = await this.checkAgainstCommon(label)
     if (alreadyExists || existsInCommon) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
+      this.error = this.errors.duplicate(this.typenames.single)
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,
@@ -119,7 +119,7 @@ class CustomCategoryController extends BaseResolver {
   async createBulk({ userId, labels }, ctx) {
     const { string } = this.validations
     if (labels.some(label => string.isEmpty(label)) || labels?.length < 1) {
-      this.error = this.errors.badInput('Category label')
+      this.error = this.errors.invalid('Category label', 'missing')
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,
@@ -170,7 +170,7 @@ class CustomCategoryController extends BaseResolver {
     const currentCustoms = await CustomCategory.find({ userId })
     const isDupe = currentCustoms.some(item => item.label === newLabel)
     if (isDupe || existsInCommon) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
+      this.error = this.errors.duplicate(this.typenames.single)
       return this.handleError(
         Topic.CustomCategory,
         ctx.operation,

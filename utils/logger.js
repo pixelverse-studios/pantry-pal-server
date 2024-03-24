@@ -11,6 +11,7 @@ export const Topic = {
   CommonCategory: 'common-category',
   CustomCategory: 'custom-category',
   Faqs: 'faqs',
+  Food: 'food api',
   PatchNotes: 'patch-notes',
   User: 'user',
   User_Categories: 'user-categories'

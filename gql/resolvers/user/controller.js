@@ -19,7 +19,7 @@ class UserController extends BaseResolver {
   async getAll(ctx) {
     const allUsers = await User.find()
     if (allUsers?.length == 0) {
-      this.error = this.errors.noUsersFound()
+      this.error = this.errors.userNotFound()
       return this.handleError(
         Topic.User,
         ctx.operation,
@@ -42,7 +42,7 @@ class UserController extends BaseResolver {
   }
   async signIn({ email, fullName, avatar, providerId }, ctx) {
     if (!email) {
-      this.error = this.errors.userNotFound
+      this.error = this.errors.userNotFound()
       return this.handleError(
         Topic.User,
         ctx.operation,
@@ -80,7 +80,7 @@ class UserController extends BaseResolver {
   async delete(email, ctx) {
     const user = await User.find({ email })
     if (!user) {
-      this.error = this.errors.userNotFound
+      this.error = this.errors.userNotFound()
       return this.handleError(
         Topic.User,
         ctx.operation,

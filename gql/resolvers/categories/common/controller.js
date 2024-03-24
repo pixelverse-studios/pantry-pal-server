@@ -70,7 +70,7 @@ class CommonCategoryController extends BaseResolver {
     const all = await CommonCategory.find()
     const alreadyExists = all.some(item => string.isMatching(label, item.label))
     if (alreadyExists) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
+      this.error = this.errors.duplicate(this.typenames.single)
       return this.handleError(
         Topic.CommonCategory,
         ctx.operation,
@@ -85,7 +85,7 @@ class CommonCategoryController extends BaseResolver {
   async createBulk({ labels }, ctx) {
     const { string } = this.validations
     if (labels.some(label => string.isEmpty(label)) || labels?.length < 1) {
-      this.error = this.errors.badInput('Category label')
+      this.error = this.errors.invalid('Category label', 'missing')
       return this.handleError(
         Topic.CommonCategory,
         ctx.operation,

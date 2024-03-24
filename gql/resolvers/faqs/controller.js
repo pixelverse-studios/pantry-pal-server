@@ -37,7 +37,7 @@ class FaqController extends BaseResolver {
   async create({ question, answer }, ctx) {
     const faq = await FAQs.findOne({ question })
     if (faq !== null) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
+      this.error = this.errors.duplicate(this.typenames.single)
       return this.handleError(
         Topic.Faqs,
         ctx.operation,

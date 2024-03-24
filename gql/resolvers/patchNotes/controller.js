@@ -43,7 +43,7 @@ class PatchNotesController extends BaseResolver {
   ) {
     const note = await PatchNotes.findOne({ title })
     if (note != null) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
+      this.error = this.errors.duplicate(this.typenames.single)
       return this.handleError(
         Topic.PatchNotes,
         ctx.operation,

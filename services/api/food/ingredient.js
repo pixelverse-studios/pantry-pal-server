@@ -1,26 +1,49 @@
-import axios from 'axios'
-import config from '../../../config'
+import { http, foodFetch } from '../../../utils/http.js'
+import { Topic, logInfo } from '../../../utils/logger.js'
 
-const { base, key } = config.food
-const req = axios.create({
-  baseURL: base,
-  headers: {
-    'x-api-key': key
-  }
-})
+const { GET } = http
 
-function IngredientService() {
-  const getById = async id => {
-    try {
-      const result = await req.get(`/food/products/?${id}`)
-      console.log('result: ', result)
-    } catch (error) {
-      console.log(error)
-      // add log error
-    }
-  }
-
-  return { getById }
+export const getByName = async name => {
+  const params = `food/ingredients/search?query=${name}&addChildren=false&metaInformation=true&sort=calories&sortDirection=asc`
+  logInfo(Topic.Food, 'GET getByName', params)
+  return await foodFetch({ params, method: GET })
 }
 
-export default IngredientService
+export const getById = async (searchId, amount, units) => {
+  const params = `food/ingredients/${searchId}/information?amount=${amount}&unit=${units}`
+  logInfo(Topic.Food, 'GET getById', params)
+  const {
+    id,
+    name,
+    unit,
+    unitShort,
+    unitLong,
+    aisle,
+    image,
+    nutrition: { nutrients }
+  } = await foodFetch({ params, method: GET })
+
+  const calories = nutrients.find(item => item.name === 'Calories')
+  const protein = nutrients.find(item => item.name === 'Protein')
+  const carbs = nutrients.find(item => item.name === 'Carbohydrates')
+  const fats = nutrients.find(item => item.name === 'Fat')
+  const breakdown = {
+    calories: { value: calories.amount, percent: calories.percentOfDailyNeeds },
+    protein: { value: protein.amount, percent: protein.percentOfDailyNeeds },
+    carbs: { value: carbs.amount, percent: carbs.percentOfDailyNeeds },
+    fats: { value: fats.amount, percent: fats.percentOfDailyNeeds }
+  }
+
+  const releventFields = {
+    aisle: aisle.split(',').map(item => item.trim()),
+    caloricBreakdown: breakdown,
+    id,
+    image,
+    name,
+    nutrition: nutrients,
+    unit,
+    unitLong,
+    unitShort
+  }
+  return releventFields
+}
