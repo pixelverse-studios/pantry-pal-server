@@ -4,6 +4,7 @@ import patchNoteTypes from './patchNotes/types.js'
 import commonCategoryTypes from './categories/common/types.js'
 import customCategoryTypes from './categories/custom/types.js'
 import foodTypes from './food/types.js'
+import recipeTypes from './recipe/types.js'
 
 export default [
   userTypes,
@@ -11,5 +12,6 @@ export default [
   patchNoteTypes,
   commonCategoryTypes,
   customCategoryTypes,
-  foodTypes
+  foodTypes,
+  recipeTypes
 ]

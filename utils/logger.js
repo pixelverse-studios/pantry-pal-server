@@ -13,6 +13,7 @@ export const Topic = {
   Faqs: 'faqs',
   Food: 'food api',
   PatchNotes: 'patch-notes',
+  Recipe: 'recipe',
   User: 'user',
   User_Categories: 'user-categories'
 }

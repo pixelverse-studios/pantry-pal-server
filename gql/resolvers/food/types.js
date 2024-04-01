@@ -47,15 +47,20 @@ const foodTypes = gql`
     carb: BreakdownValues
   }
 
+  type Units {
+    base: String
+    short: String
+    long: String
+  }
+
   type Food {
     id: Float
     name: String
     image: String
-    unit: String
-    unitShort: String
-    unitLong: String
+    units: Units
     possibleUnits: [String]
     nutrition: [FoodNutrients]
+    estimatedCost: Float
     caloricBreakdown: CaloricBreakdown
     aisle: [String]
   }

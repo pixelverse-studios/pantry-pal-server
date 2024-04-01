@@ -4,6 +4,7 @@ import PatchNotesResolver from './patchNotes/resolver.js'
 import CommonCategoryResolver from './categories/common/resolver.js'
 import CustomCategoryResolver from './categories/custom/resolver.js'
 import FoodResolver from './food/resolver.js'
+import RecipeResolver from './recipe/resolver.js'
 
 export const Query = {
   ...UserResolver.Queries,
@@ -11,7 +12,8 @@ export const Query = {
   ...PatchNotesResolver.Queries,
   ...CommonCategoryResolver.Queries,
   ...CustomCategoryResolver.Queries,
-  ...FoodResolver.Queries
+  ...FoodResolver.Queries,
+  ...RecipeResolver.Queries
 }
 
 export const Mutation = {
@@ -19,5 +21,6 @@ export const Mutation = {
   ...FaqResolver.Mutations,
   ...PatchNotesResolver.Mutations,
   ...CommonCategoryResolver.Mutations,
-  ...CustomCategoryResolver.Mutations
+  ...CustomCategoryResolver.Mutations,
+  ...RecipeResolver.Mutations
 }

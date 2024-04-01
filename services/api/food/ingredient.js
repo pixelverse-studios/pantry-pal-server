@@ -4,7 +4,7 @@ import { Topic, logInfo } from '../../../utils/logger.js'
 const { GET } = http
 
 export const getByName = async name => {
-  const params = `food/ingredients/search?query=${name}&addChildren=false&metaInformation=true&sort=calories&sortDirection=asc`
+  const params = `food/ingredients/search?query=${name}&addChildren=false&metaInformation=true&number=100`
   logInfo(Topic.Food, 'GET getByName', params)
   return await foodFetch({ params, method: GET })
 }
@@ -20,6 +20,7 @@ export const getById = async (searchId, amount, units) => {
     unitLong,
     aisle,
     image,
+    estimatedCost,
     nutrition: { nutrients }
   } = await foodFetch({ params, method: GET })
 
@@ -34,16 +35,20 @@ export const getById = async (searchId, amount, units) => {
     fats: { value: fats.amount, percent: fats.percentOfDailyNeeds }
   }
 
+  const calculatedCost = estimatedCost.value / 100
   const releventFields = {
     aisle: aisle.split(',').map(item => item.trim()),
     caloricBreakdown: breakdown,
     id,
     image,
     name,
+    estimatedCost: calculatedCost.toFixed(2),
     nutrition: nutrients,
-    unit,
-    unitLong,
-    unitShort
+    units: {
+      base: unit,
+      short: unitShort,
+      long: unitLong
+    }
   }
   return releventFields
 }
