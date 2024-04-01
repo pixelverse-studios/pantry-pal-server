@@ -30,7 +30,14 @@ class RecipeController extends BaseResolver {
   }
 
   async getAll() {}
-  async get() {}
+  async get({ id }, ctx) {
+    const recipe = await Recipe.findById(id)
+    if (recipe == null) {
+      this.error = this.errors.notFound(this.typenames.single)
+      return this.handleError(Topic.Recipe, ctx.operation, 'Recipe not found')
+    }
+    return this.handleSingleItemSuccess(recipe)
+  }
   async getFiltered() {}
   async create({ payload }, ctx) {
     const recipeByName = await Recipe.findOne({
