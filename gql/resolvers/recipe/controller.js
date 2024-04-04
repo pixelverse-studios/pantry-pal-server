@@ -29,7 +29,15 @@ class RecipeController extends BaseResolver {
     throw new Error('No category was found with the provided ID')
   }
 
-  async getAll() {}
+  async getAll({ userId }) {
+    if (userId == undefined) {
+      const allRecipes = await Recipe.find()
+      return this.handleMultiItemSuccess(allRecipes)
+    } else {
+      const userRecipes = await Recipe.find({ userId })
+      return this.handleMultiItemSuccess(userRecipes)
+    }
+  }
   async get({ id }, ctx) {
     const recipe = await Recipe.findById(id)
     if (recipe == null) {
