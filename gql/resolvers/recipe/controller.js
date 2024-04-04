@@ -2,7 +2,7 @@ import BaseResolver from '../../baseResolver.js'
 import Recipe from '../../../models/Recipe.js'
 import CommonCategory from '../../../models/CommonCategory.js'
 import CustomCategory from '../../../models/CustomCategory.js'
-import { Command, Topic, logError } from '../../../utils/logger.js'
+import { Command, Topic, logError, logInfo } from '../../../utils/logger.js'
 
 class RecipeController extends BaseResolver {
   constructor() {
@@ -104,7 +104,13 @@ class RecipeController extends BaseResolver {
     return this.handleSingleItemSuccess(saved)
   }
   async edit() {}
-  async delete() {}
+  async delete({ id }, ctx) {
+    logInfo(Topic.Recipe, ctx.operation, `${Command.Delete} ${id}`)
+    const result = await Recipe.findByIdAndDelete(id)
+    const { string } = this.validations
+    const success = string.isMatching(result._id, id)
+    return success
+  }
   async createComment() {
     // TODO: Add logic for this when we get to the friends list phase
   }
