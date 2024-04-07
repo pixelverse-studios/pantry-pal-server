@@ -103,7 +103,37 @@ class RecipeController extends BaseResolver {
     const saved = await newRecipe.save()
     return this.handleSingleItemSuccess(saved)
   }
-  async edit() {}
+  async edit({ id, userId, payload }, ctx) {
+    // TODO: Validate userId to token
+    const recipe = await Recipe.findOne({ _id: id, userId })
+    if (recipe == null) {
+      this.error = this.errors.notFound(this.typenames.single)
+      return this.handleError(Topic.Recipe, ctx.operation, 'Recipe not found')
+    }
+    const { deepEquals } = this.validations
+    const editedPayload = {}
+    for (const [key, value] of Object.entries(payload)) {
+      const isMatching = deepEquals(value, recipe[key], { strict: true })
+      if (!isMatching) {
+        editedPayload[key] = value ?? recipe[key]
+      }
+    }
+    if (Object.keys(editedPayload).length === 0) {
+      this.error = this.errors.failure(
+        'there were no valid updates provided',
+        'update recipe,'
+      )
+      return this.handleError(
+        Topic.Recipe,
+        ctx.operation,
+        `Unable to edit recipe ${id}`
+      )
+    }
+    const updated = await Recipe.findByIdAndUpdate(id, editedPayload, {
+      new: true
+    })
+    return this.handleSingleItemSuccess(updated)
+  }
   async delete({ id }, ctx) {
     logInfo(Topic.Recipe, ctx.operation, `${Command.Delete} ${id}`)
     const result = await Recipe.findByIdAndDelete(id)

@@ -96,7 +96,7 @@ const recipeTypes = gql`
     ingredients: [Ingredient]
     macros: Macros
     totalEstimatedCost: Float
-    instruction: [String]
+    instructions: [String]
     cookingMethod: String
     allergies: [String]
     category: Category
@@ -174,7 +174,6 @@ const recipeTypes = gql`
   }
 
   input NewRecipePayload {
-    userId: ID!
     title: String!
     ingredients: [IngredientField!]!
     instructions: [String!]!
@@ -188,8 +187,6 @@ const recipeTypes = gql`
   }
 
   input EditRecipePayload {
-    id: ID!
-    userId: ID!
     title: String
     ingredients: [IngredientField]
     instructions: [String]
@@ -203,8 +200,8 @@ const recipeTypes = gql`
   }
 
   type Mutation {
-    createRecipe(payload: NewRecipePayload): RecipeItem
-    editRecipe(payload: EditRecipePayload): RecipeItem
+    createRecipe(userId: ID!, payload: NewRecipePayload): RecipeItem
+    editRecipe(id: ID!, userId: ID!, payload: EditRecipePayload): RecipeItem
     deleteRecipe(id: ID!): Boolean
     createCommentInteraction: RecipeItem
     createRatingInteraction: RecipeItem

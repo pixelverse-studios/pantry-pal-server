@@ -1,3 +1,4 @@
+import deepEqual from 'deep-equal'
 import { FormValidations } from '../utils/validations/form.js'
 import * as StringValidations from '../utils/validations/stringUtils.js'
 import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
@@ -14,7 +15,8 @@ class BaseResolver {
     this.typenames = { single: '', multi: '' }
     this.validations = {
       form: FormValidations,
-      string: StringValidations
+      string: StringValidations,
+      deepEquals: deepEqual
     }
     this.formatters = {
       date: { dateToLocal, dateToUTC }
