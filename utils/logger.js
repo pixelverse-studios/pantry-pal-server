@@ -11,7 +11,9 @@ export const Topic = {
   CommonCategory: 'common-category',
   CustomCategory: 'custom-category',
   Faqs: 'faqs',
+  Food: 'food api',
   PatchNotes: 'patch-notes',
+  Recipe: 'recipe',
   User: 'user',
   User_Categories: 'user-categories'
 }
@@ -22,7 +24,8 @@ export const Command = {
   Delete: 'Proccessing DELETE of',
   Delete_Ids: 'Processing DELETE of IDs: ',
   Delete_Labels: 'Processing DELETE of Labels: ',
-  Fetch: 'Fetching '
+  Fetch: 'Fetching ',
+  Register: 'Adding new user '
 }
 
 const logMessage = (topic, level, operation, ...args) => {

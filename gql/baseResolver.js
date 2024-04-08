@@ -1,3 +1,4 @@
+import deepEqual from 'deep-equal'
 import { FormValidations } from '../utils/validations/form.js'
 import * as StringValidations from '../utils/validations/stringUtils.js'
 import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
@@ -14,7 +15,8 @@ class BaseResolver {
     this.typenames = { single: '', multi: '' }
     this.validations = {
       form: FormValidations,
-      string: StringValidations
+      string: StringValidations,
+      deepEquals: deepEqual
     }
     this.formatters = {
       date: { dateToLocal, dateToUTC }
@@ -23,28 +25,28 @@ class BaseResolver {
     this.schemas = { User }
 
     const baseErrors = {
-      noUsersFound: () => ({
-        type: 'noUsersFound',
-        message: () => 'No users found'
-      }),
-      userNotFound: () => ({
-        type: 'userNotFound',
-        message: () => 'User not found'
+      unauthorized: () => ({
+        type: 'unauthorized',
+        message: () => 'You do not have access to that'
       }),
       notFound: item => ({
         type: 'notFound',
         message: `${item} not found`
       }),
-      badInput: field => ({
-        type: 'badInput',
-        message: `${field} is required`
+      userNotFound: () => ({
+        type: 'notFound',
+        message: `User not found`
       }),
-      failedToMutate: (field, action) => ({
-        type: 'failedToMutate',
+      invalid: (field, action) => ({
+        type: 'invalid',
+        message: `${field} is ${action}`
+      }),
+      failure: (field, action) => ({
+        type: 'failure',
         message: `Failed to ${action} ${field}`
       }),
-      duplicateItem: item => ({
-        type: 'duplicateItem',
+      duplicate: item => ({
+        type: 'duplicate',
         message: `${item} already exists`
       })
     }

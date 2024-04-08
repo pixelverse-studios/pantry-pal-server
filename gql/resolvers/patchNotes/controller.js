@@ -1,5 +1,6 @@
 import BaseResolver from '../../baseResolver.js'
 import PatchNotes from '../../../models/PatchNotes.js'
+import { Command, Topic, logError, logInfo } from '../../../utils/logger.js'
 
 class PatchNotesController extends BaseResolver {
   constructor() {
@@ -12,32 +13,45 @@ class PatchNotesController extends BaseResolver {
       multi: 'PatchNotes'
     }
   }
-  catchError(action) {
+  catchError(action, { topic, operation }, error) {
+    logError(topic, operation, error)
     return this.catchError(action)
   }
-  async getAll() {
+  async getAll(ctx) {
     const patchNotes = await PatchNotes.find()
     if (patchNotes?.length == 0) {
       this.error = this.errors.notFound(this.typenames.multi)
-      return this.handleError()
+      return this.handleError(
+        Topic.PatchNotes,
+        ctx.operation,
+        'System has no patch notes'
+      )
     }
     return this.handleMultiItemSuccess(patchNotes)
   }
-  async create({
-    title,
-    description,
-    datePublished,
-    display,
-    targetDate,
-    targetVersion,
-    graphic
-  }) {
+  async create(
+    {
+      title,
+      description,
+      datePublished,
+      display,
+      targetDate,
+      targetVersion,
+      graphic
+    },
+    ctx
+  ) {
     const note = await PatchNotes.findOne({ title })
     if (note != null) {
-      this.error = this.errors.duplicateItem(this.typenames.single)
-      return this.handleError()
+      this.error = this.errors.duplicate(this.typenames.single)
+      return this.handleError(
+        Topic.PatchNotes,
+        ctx.operation,
+        `Duplicate patch note for ${title}`
+      )
     }
 
+    logInfo(Topic.PatchNotes, ctx.operation, `${Command.Add} ${title}`)
     const { dateToUTC } = this.formatters.date
     const newNote = new PatchNotes({
       title,
@@ -53,13 +67,17 @@ class PatchNotesController extends BaseResolver {
     const allNotes = await PatchNotes.find()
     return this.handleMultiItemSuccess(allNotes)
   }
-  async edit({ id, ...rest }) {
+  async edit({ id, ...rest }, ctx) {
     const note = await PatchNotes.findById(id)
     if (note == null) {
       this.error = this.errors.notFound(this.typenames.single)
-      return this.handleError()
+      return this.handleError(
+        Topic.PatchNotes,
+        ctx.operation,
+        `Patch note ${id} was not found`
+      )
     }
-
+    logInfo(Topic.PatchNotes, ctx.operation, `${Command.Add} ${note.title}`)
     this.buildPayload({ ...rest }, note)
     await PatchNotes.findOneAndUpdate(
       { _id: id },
@@ -70,21 +88,31 @@ class PatchNotesController extends BaseResolver {
     )
     return this.handleMultiItemSuccess(await PatchNotes.find())
   }
-  async delete({ id }) {
+  async delete({ id }, ctx) {
     const note = await PatchNotes.findById(id)
     if (note == null) {
       this.error = this.errors.notFound(this.typenames.single)
-      return this.handleError()
+      return this.handleError(
+        Topic.PatchNotes,
+        ctx.operation,
+        `Patch note ${id} was not found`
+      )
     }
+
+    logInfo(Topic.PatchNotes, ctx.operation, `${Command.Add} ${note.title}`)
 
     await PatchNotes.findOneAndDelete(id)
     return this.handleMultiItemSuccess(await PatchNotes.find())
   }
-  async publish({ id, ...rest }) {
+  async publish({ id, ...rest }, ctx) {
     const note = await PatchNotes.findById(id)
     if (note == null) {
       this.error = this.errors.notFound(this.typenames.single)
-      return this.handleError()
+      return this.handleError(
+        Topic.PatchNotes,
+        ctx.operation,
+        `Patch note ${id} was not found`
+      )
     }
     this.buildPayload({ ...rest }, note)
     await PatchNotes.findByIdAndUpdate(

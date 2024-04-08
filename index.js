@@ -8,9 +8,9 @@ import {
 } from 'apollo-server-core'
 import { GraphQLScalarType, Kind } from 'graphql'
 
-import typeDefs from './gql/typeDefs.js'
-import { Query, Mutation } from './gql/resolvers/index.js'
-import 'dotenv/config'
+import typeDefs from './gql/resolvers/typeDefs.js'
+import { Query, Mutation } from './gql/resolvers/resolvers.js'
+import config, { PRODUCTION } from './config.js'
 
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
@@ -29,8 +29,8 @@ const dateScalar = new GraphQLScalarType({
   }
 })
 
-const port = process.env.PORT ?? 5050
-const DB_URL = process.env.DB_CONNECT_URL ?? ''
+const port = config.port
+const DB_URL = config.db
 
 async function startDB() {
   await connect(DB_URL)
@@ -41,7 +41,7 @@ async function startDB() {
     })
 }
 startDB()
-const isProduction = process.env.ENVIRONMENT === 'PRODUCTION'
+const isProduction = config.environment === PRODUCTION
 async function startApolloServer() {
   const app = express()
   const httpServer = createServer(app)
