@@ -67,7 +67,7 @@ const recipeTypes = gql`
   }
 
   type User {
-    id: String
+    id: ID
     name: String
     email: String
   }
@@ -91,7 +91,7 @@ const recipeTypes = gql`
 
   type Recipe {
     _id: ID!
-    userId: String!
+    userId: ID!
     title: String!
     ingredients: [Ingredient]
     macros: Macros
@@ -167,10 +167,18 @@ const recipeTypes = gql`
     endDate: Date
   }
 
+  type BulkDeletes {
+    total: Float
+    succeeded: [String]
+    failed: [String]
+  }
+  union BulkDeleteItems = BulkDeletes | Errors
+
   type Query {
     getRecipes(userId: ID): RecipeItems
     getRecipe(id: ID!): RecipeItem
     getFilteredRecipes(filters: FilteredPayload): RecipeItems
+    getRecipesByKeyword(userId: ID, search: String!): RecipeItems
   }
 
   input NewRecipePayload {
@@ -203,6 +211,7 @@ const recipeTypes = gql`
     createRecipe(userId: ID!, payload: NewRecipePayload): RecipeItem
     editRecipe(id: ID!, userId: ID!, payload: EditRecipePayload): RecipeItem
     deleteRecipe(id: ID!): Boolean
+    deleteRecipes(ids: [ID!]!): BulkDeleteItems
     createCommentInteraction: RecipeItem
     createRatingInteraction: RecipeItem
   }

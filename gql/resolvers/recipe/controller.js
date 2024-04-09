@@ -47,10 +47,18 @@ class RecipeController extends BaseResolver {
     return this.handleSingleItemSuccess(recipe)
   }
   async getFiltered() {}
-  async create({ payload }, ctx) {
+  async getByKeyword({ userId, search }, ctx) {
+    console.log('search: ', search)
+    console.log('userId: ', userId)
+    console.log('---')
+    const recipes =
+      userId != null ? await Recipe.find({ userId }) : await Recipe.find()
+    console.log(recipes.length)
+  }
+  async create({ userId, payload }, ctx) {
     const recipeByName = await Recipe.findOne({
       title: payload.title,
-      userId: payload.userId
+      userId
     })
     if (recipeByName != null) {
       this.error = this.errors.duplicate(this.typenames.single)
@@ -90,6 +98,7 @@ class RecipeController extends BaseResolver {
 
     const newRecipe = new Recipe({
       ...payload,
+      userId,
       category,
       image: payload?.image != null ? payload.image : '',
       totalEstimatedCost,
@@ -140,6 +149,29 @@ class RecipeController extends BaseResolver {
     const { string } = this.validations
     const success = string.isMatching(result._id, id)
     return success
+  }
+  async deleteBulk({ ids }) {
+    const results = await Recipe.deleteMany({ _id: { $in: ids } })
+    const refreshed = await Recipe.find()
+
+    const failed = []
+    const succeeded = []
+    if (results.deletedCount === ids.length) {
+      succeeded.push(...ids)
+    } else {
+      for (const id of ids) {
+        if (!refreshed.some(doc => doc._id === id) && !failed.includes(id)) {
+          succeeded.push(id)
+        } else {
+          failed.push(id)
+        }
+      }
+    }
+    const response = { total: ids.length, succeeded, failed }
+    return {
+      __typename: 'BulkDeletes',
+      ...response
+    }
   }
   async createComment() {
     // TODO: Add logic for this when we get to the friends list phase
