@@ -8,6 +8,7 @@ const recipeTypes = gql`
     invalid
     notFound
     unauthorized
+    customMessage
   }
 
   type FoodNutrients {

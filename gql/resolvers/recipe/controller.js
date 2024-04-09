@@ -48,12 +48,31 @@ class RecipeController extends BaseResolver {
   }
   async getFiltered() {}
   async getByKeyword({ userId, search }, ctx) {
-    console.log('search: ', search)
-    console.log('userId: ', userId)
-    console.log('---')
-    const recipes =
-      userId != null ? await Recipe.find({ userId }) : await Recipe.find()
-    console.log(recipes.length)
+    const searchParam = new RegExp(search, 'i')
+    const regex = { $regex: searchParam }
+    const searchConditions = [
+      { title: regex },
+      { 'ingredients.name': regex },
+      { 'category.label': regex },
+      { tags: regex }
+    ]
+    const query =
+      userId != null
+        ? {
+            userId,
+            $or: searchConditions
+          }
+        : {
+            $or: searchConditions
+          }
+    const recipes = await Recipe.find(query)
+    if (recipes.length > 0) {
+      return this.handleMultiItemSuccess(recipes)
+    } else {
+      const message = `No recipes were found with "${search}"`
+      this.error = this.errors.customMessage(message)
+      return this.handleInfo(Topic.Recipe, ctx.operation, message)
+    }
   }
   async create({ userId, payload }, ctx) {
     const recipeByName = await Recipe.findOne({
