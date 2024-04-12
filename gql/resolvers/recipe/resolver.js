@@ -47,6 +47,17 @@ const Queries = {
         error
       )
     }
+  },
+  async getFilters(_, payload, ctx) {
+    try {
+      return await controller.getFilters(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'fetching available filters',
+        { topic: Topic.Filters, operation: ctx.operation },
+        error
+      )
+    }
   }
 }
 

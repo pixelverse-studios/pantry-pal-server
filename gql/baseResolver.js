@@ -76,9 +76,9 @@ class BaseResolver {
       ...this.error
     }
   }
-  handleSingleItemSuccess(values) {
+  handleSingleItemSuccess(values, typenameOverride) {
     return {
-      __typename: this.typenames.single,
+      __typename: typenameOverride ?? this.typenames.single,
       ...values._doc
     }
   }

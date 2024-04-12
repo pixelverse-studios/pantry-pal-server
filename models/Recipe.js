@@ -2,7 +2,11 @@ import { model, Schema } from 'mongoose'
 
 const recipeSchema = new Schema({
   id: { type: 'UUID', unique: true },
-  userId: String,
+  user: {
+    _id: String,
+    email: String,
+    firstName: String
+  },
   title: String,
   ingredients: [
     {
@@ -55,7 +59,7 @@ const recipeSchema = new Schema({
   instructions: [String],
   cookingMethod: String,
   allergies: [String],
-  category: { categoryId: String, label: String },
+  category: { _id: String, label: String },
   rating: Number,
   difficulty: Number,
   tags: [String],
@@ -70,8 +74,8 @@ const recipeSchema = new Schema({
     ratings: [
       {
         user: {
-          id: String,
-          name: String,
+          _id: String,
+          firstName: String,
           email: String
         },
         score: Number,
@@ -81,8 +85,8 @@ const recipeSchema = new Schema({
     comments: [
       {
         user: {
-          id: String,
-          name: String,
+          _id: String,
+          firstName: String,
           email: String
         },
         text: String,

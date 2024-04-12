@@ -3,6 +3,7 @@ import Recipe from '../../../models/Recipe.js'
 import CommonCategory from '../../../models/CommonCategory.js'
 import CustomCategory from '../../../models/CustomCategory.js'
 import { Command, Topic, logError, logInfo } from '../../../utils/logger.js'
+import { setFilters } from '../../../utils/recipe/index.js'
 
 class RecipeController extends BaseResolver {
   constructor() {
@@ -22,8 +23,8 @@ class RecipeController extends BaseResolver {
       CustomCategory.findById(id),
       CommonCategory.findById(id)
     ])
-    if (custom != null) return { categoryId: custom._id, label: custom.label }
-    if (common != null) return { categoryId: common._id, label: common.label }
+    if (custom != null) return { _id: custom._id, label: custom.label }
+    if (common != null) return { _id: common._id, label: common.label }
 
     logError(Topic.Recipe, 'getFullCategory', `${Command.Fetch} ${id}`)
     throw new Error('No category was found with the provided ID')
@@ -34,7 +35,7 @@ class RecipeController extends BaseResolver {
       const allRecipes = await Recipe.find()
       return this.handleMultiItemSuccess(allRecipes)
     } else {
-      const userRecipes = await Recipe.find({ userId })
+      const userRecipes = await Recipe.find({ 'user._id': userId })
       return this.handleMultiItemSuccess(userRecipes)
     }
   }
@@ -45,6 +46,18 @@ class RecipeController extends BaseResolver {
       return this.handleError(Topic.Recipe, ctx.operation, 'Recipe not found')
     }
     return this.handleSingleItemSuccess(recipe)
+  }
+  async getFilters({ userId }) {
+    const recipes =
+      userId != null
+        ? await Recipe.find({ 'user._id': userId })
+        : await Recipe.find()
+
+    const filters = setFilters(recipes)
+    return {
+      __typename: 'Filter',
+      ...filters
+    }
   }
   async getFiltered() {}
   async getByKeyword({ userId, search }, ctx) {
@@ -59,7 +72,7 @@ class RecipeController extends BaseResolver {
     const query =
       userId != null
         ? {
-            userId,
+            'user._id': userId,
             $or: searchConditions
           }
         : {
@@ -77,7 +90,7 @@ class RecipeController extends BaseResolver {
   async create({ userId, payload }, ctx) {
     const recipeByName = await Recipe.findOne({
       title: payload.title,
-      userId
+      'user._id': userId
     })
     if (recipeByName != null) {
       this.error = this.errors.duplicate(this.typenames.single)
@@ -98,26 +111,26 @@ class RecipeController extends BaseResolver {
     const costs = []
     payload.ingredients.forEach(ingredient => {
       costs.push(ingredient.estimatedCost)
-
-      const protein = ingredient.nutrition.find(
-        nutrient => nutrient.name === 'Protein'
-      )
-      const carbs = ingredient.nutrition.find(
-        nutrient => nutrient.name === 'Carbohydrates'
-      )
-      const fat = ingredient.nutrition.find(nutrient => nutrient.name === 'Fat')
-      macros.protein += protein.amount
-      macros.carbs += carbs.amount
-      macros.fat += fat.amount
+      const getNutrientValue = label =>
+        ingredient.nutrition.find(nutrient => nutrient.name === label)
+      macros.calories += getNutrientValue('Calories').amount
+      macros.protein += getNutrientValue('Protein').amount
+      macros.carbs += getNutrientValue('Carbohydrates').amount
+      macros.fat += getNutrientValue('Fat').amount
     })
 
     const totalEstimatedCost = costs.reduce((accumulator, currentValue) => {
       return accumulator + currentValue
     }, 0)
 
+    const user = await this.schemas.User.findById(userId)
     const newRecipe = new Recipe({
       ...payload,
-      userId,
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        email: user.email
+      },
       category,
       image: payload?.image != null ? payload.image : '',
       totalEstimatedCost,
@@ -133,7 +146,7 @@ class RecipeController extends BaseResolver {
   }
   async edit({ id, userId, payload }, ctx) {
     // TODO: Validate userId to token
-    const recipe = await Recipe.findOne({ _id: id, userId })
+    const recipe = await Recipe.findOne({ _id: id, 'user._id': userId })
     if (recipe == null) {
       this.error = this.errors.notFound(this.typenames.single)
       return this.handleError(Topic.Recipe, ctx.operation, 'Recipe not found')

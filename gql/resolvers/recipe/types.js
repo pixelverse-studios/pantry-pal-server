@@ -56,7 +56,7 @@ const recipeTypes = gql`
   }
 
   type Category {
-    categoryId: ID
+    _id: ID
     label: String
   }
 
@@ -68,8 +68,8 @@ const recipeTypes = gql`
   }
 
   type User {
-    id: ID
-    name: String
+    _id: ID
+    firstName: String
     email: String
   }
 
@@ -92,7 +92,7 @@ const recipeTypes = gql`
 
   type Recipe {
     _id: ID!
-    userId: ID!
+    user: User!
     title: String!
     ingredients: [Ingredient]
     macros: Macros
@@ -175,11 +175,44 @@ const recipeTypes = gql`
   }
   union BulkDeleteItems = BulkDeletes | Errors
 
+  type FilterIngredients {
+    names: [String]
+    aisles: [String]
+  }
+  type FilterRangeItem {
+    min: Float
+    max: Float
+    step: Float
+  }
+  type FilterMacros {
+    calories: FilterRangeItem
+    protein: FilterRangeItem
+    carbs: FilterRangeItem
+    fat: FilterRangeItem
+  }
+  type Filter {
+    titles: [String]
+    ingredients: FilterIngredients
+    macros: FilterMacros
+    cost: FilterRangeItem
+    cookingMethod: [String]
+    category: [Category]
+    allergies: [String]
+    rating: FilterRangeItem
+    difficulty: FilterRangeItem
+    tags: [String]
+    createdAt: FilterRangeItem
+    updatedAt: FilterRangeItem
+    users: [User]
+  }
+  union FilterItems = Filter | Errors
+
   type Query {
     getRecipes(userId: ID): RecipeItems
     getRecipe(id: ID!): RecipeItem
     getFilteredRecipes(filters: FilteredPayload): RecipeItems
     getRecipesByKeyword(userId: ID, search: String!): RecipeItems
+    getFilters(userId: ID): FilterItems
   }
 
   input NewRecipePayload {
