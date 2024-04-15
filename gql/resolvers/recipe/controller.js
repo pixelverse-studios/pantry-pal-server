@@ -59,7 +59,11 @@ class RecipeController extends BaseResolver {
       ...filters
     }
   }
-  async getFiltered() {}
+  async getFiltered({ filters }) {
+    // Do we even need this on the server? We are returning the full data set to the ui, and giving it the possible filters. We can just do client side filtering.
+    // TODO: Check token for all functions
+    console.log(filters)
+  }
   async getByKeyword({ userId, search }, ctx) {
     const searchParam = new RegExp(search, 'i')
     const regex = { $regex: searchParam }

@@ -154,18 +154,32 @@ const recipeTypes = gql`
     aisle: [String]
   }
 
+  input FilteredRange {
+    min: Float
+    max: Float
+  }
+
+  input FilteredMacros {
+    calories: FilteredRange
+    protein: FilteredRange
+    carbs: FilteredRange
+    fat: FilteredRange
+  }
+
   input FilteredPayload {
-    userId: ID
     title: String
-    ingredients: [String]
-    cookingMethod: String
+    ingredientNames: [String]
+    ingredientAisles: [String]
+    macros: FilteredMacros
+    cookingMethod: [String]
+    cost: FilteredRange
     allergies: [String]
     category: [ID]
-    rating: Float
-    difficulty: Float
+    rating: FilteredRange
+    difficulty: FilteredRange
     tags: [String]
-    startDate: Date
-    endDate: Date
+    createdAt: FilteredRange
+    users: [String]
   }
 
   type BulkDeletes {
