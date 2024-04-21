@@ -36,6 +36,28 @@ const Queries = {
         error
       )
     }
+  },
+  async getRecipesByKeyword(_, payload, ctx) {
+    try {
+      return await controller.getByKeyword(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'fetching filtered recipes',
+        { topic, operation: ctx.operation },
+        error
+      )
+    }
+  },
+  async getFilters(_, payload, ctx) {
+    try {
+      return await controller.getFilters(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'fetching available filters',
+        { topic: Topic.Filters, operation: ctx.operation },
+        error
+      )
+    }
   }
 }
 
@@ -44,7 +66,6 @@ const Mutations = {
     try {
       return await controller.create(payload, ctx)
     } catch (error) {
-      console.log(error)
       controller.catchError(
         'creating recipe',
         { topic, operation: ctx.operation },
@@ -69,6 +90,17 @@ const Mutations = {
     } catch (error) {
       controller.catchError(
         'deleting recipe',
+        { topic, operation: ctx.operation },
+        error
+      )
+    }
+  },
+  async deleteRecipes(_, payload, ctx) {
+    try {
+      return await controller.deleteBulk(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'bulk deleting recipes',
         { topic, operation: ctx.operation },
         error
       )

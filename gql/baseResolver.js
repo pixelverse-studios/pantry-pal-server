@@ -2,7 +2,7 @@ import deepEqual from 'deep-equal'
 import { FormValidations } from '../utils/validations/form.js'
 import * as StringValidations from '../utils/validations/stringUtils.js'
 import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
-import { logWarning } from '../utils/logger.js'
+import { logInfo, logWarning } from '../utils/logger.js'
 import User from '../models/User.js'
 
 class BaseResolver {
@@ -48,6 +48,10 @@ class BaseResolver {
       duplicate: item => ({
         type: 'duplicate',
         message: `${item} already exists`
+      }),
+      customMessage: message => ({
+        type: 'customMessage',
+        message
       })
     }
     this.errors = { ...baseErrors }
@@ -65,9 +69,16 @@ class BaseResolver {
       ...this.error
     }
   }
-  handleSingleItemSuccess(values) {
+  handleInfo(topic, operation, details) {
+    logInfo(topic, operation, details)
     return {
-      __typename: this.typenames.single,
+      __typename: 'Errors',
+      ...this.error
+    }
+  }
+  handleSingleItemSuccess(values, typenameOverride) {
+    return {
+      __typename: typenameOverride ?? this.typenames.single,
       ...values._doc
     }
   }

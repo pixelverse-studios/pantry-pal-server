@@ -8,6 +8,7 @@ const recipeTypes = gql`
     invalid
     notFound
     unauthorized
+    customMessage
   }
 
   type FoodNutrients {
@@ -55,7 +56,7 @@ const recipeTypes = gql`
   }
 
   type Category {
-    categoryId: ID
+    _id: ID
     label: String
   }
 
@@ -67,8 +68,8 @@ const recipeTypes = gql`
   }
 
   type User {
-    id: String
-    name: String
+    _id: ID
+    firstName: String
     email: String
   }
 
@@ -91,7 +92,7 @@ const recipeTypes = gql`
 
   type Recipe {
     _id: ID!
-    userId: String!
+    user: User!
     title: String!
     ingredients: [Ingredient]
     macros: Macros
@@ -153,24 +154,79 @@ const recipeTypes = gql`
     aisle: [String]
   }
 
+  input FilteredRange {
+    min: Float
+    max: Float
+  }
+
+  input FilteredMacros {
+    calories: FilteredRange
+    protein: FilteredRange
+    carbs: FilteredRange
+    fat: FilteredRange
+  }
+
   input FilteredPayload {
-    userId: ID
     title: String
-    ingredients: [String]
-    cookingMethod: String
+    ingredientNames: [String]
+    ingredientAisles: [String]
+    macros: FilteredMacros
+    cookingMethod: [String]
+    cost: FilteredRange
     allergies: [String]
     category: [ID]
-    rating: Float
-    difficulty: Float
+    rating: FilteredRange
+    difficulty: FilteredRange
     tags: [String]
-    startDate: Date
-    endDate: Date
+    createdAt: FilteredRange
+    users: [String]
   }
+
+  type BulkDeletes {
+    total: Float
+    succeeded: [String]
+    failed: [String]
+  }
+  union BulkDeleteItems = BulkDeletes | Errors
+
+  type FilterIngredients {
+    names: [String]
+    aisles: [String]
+  }
+  type FilterRangeItem {
+    min: Float
+    max: Float
+    step: Float
+  }
+  type FilterMacros {
+    calories: FilterRangeItem
+    protein: FilterRangeItem
+    carbs: FilterRangeItem
+    fat: FilterRangeItem
+  }
+  type Filter {
+    titles: [String]
+    ingredients: FilterIngredients
+    macros: FilterMacros
+    cost: FilterRangeItem
+    cookingMethod: [String]
+    category: [Category]
+    allergies: [String]
+    rating: FilterRangeItem
+    difficulty: FilterRangeItem
+    tags: [String]
+    createdAt: FilterRangeItem
+    updatedAt: FilterRangeItem
+    users: [User]
+  }
+  union FilterItems = Filter | Errors
 
   type Query {
     getRecipes(userId: ID): RecipeItems
     getRecipe(id: ID!): RecipeItem
     getFilteredRecipes(filters: FilteredPayload): RecipeItems
+    getRecipesByKeyword(userId: ID, search: String!): RecipeItems
+    getFilters(userId: ID): FilterItems
   }
 
   input NewRecipePayload {
@@ -203,6 +259,7 @@ const recipeTypes = gql`
     createRecipe(userId: ID!, payload: NewRecipePayload): RecipeItem
     editRecipe(id: ID!, userId: ID!, payload: EditRecipePayload): RecipeItem
     deleteRecipe(id: ID!): Boolean
+    deleteRecipes(ids: [ID!]!): BulkDeleteItems
     createCommentInteraction: RecipeItem
     createRatingInteraction: RecipeItem
   }
