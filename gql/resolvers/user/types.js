@@ -48,8 +48,8 @@ const userTypes = gql`
   union UserItems = Users | Errors
 
   type Query {
-    getAllUsers: UserItems!
-    getUser(email: String!): UserItem
+    allUsers: UserItems!
+    user(email: String!): UserItem
   }
 
   type Mutation {

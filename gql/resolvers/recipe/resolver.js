@@ -4,7 +4,7 @@ const controller = new RecipeController()
 const topic = Topic.Recipe
 
 const Queries = {
-  async getRecipes(_, payload, ctx) {
+  async allRecipes(_, payload, ctx) {
     try {
       return await controller.getAll(payload, ctx)
     } catch (error) {
@@ -15,7 +15,18 @@ const Queries = {
       )
     }
   },
-  async getRecipe(_, payload, ctx) {
+  async userRecipes(_, payload, ctx) {
+    try {
+      return await controller.getForUser(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'fetching recipes',
+        { topic, operation: ctx.operation },
+        error
+      )
+    }
+  },
+  async recipe(_, payload, ctx) {
     try {
       return await controller.get(payload, ctx)
     } catch (error) {
@@ -26,7 +37,7 @@ const Queries = {
       )
     }
   },
-  async getFilteredRecipes(_, payload, ctx) {
+  async filteredRecipes(_, payload, ctx) {
     try {
       return await controller.getFiltered(payload, ctx)
     } catch (error) {
@@ -37,7 +48,7 @@ const Queries = {
       )
     }
   },
-  async getRecipesByKeyword(_, payload, ctx) {
+  async searchResults(_, payload, ctx) {
     try {
       return await controller.getByKeyword(payload, ctx)
     } catch (error) {
@@ -48,7 +59,18 @@ const Queries = {
       )
     }
   },
-  async getFilters(_, payload, ctx) {
+  async userFilters(_, payload, ctx) {
+    try {
+      return await controller.getFilters(payload, ctx)
+    } catch (error) {
+      controller.catchError(
+        'fetching available filters',
+        { topic: Topic.Filters, operation: ctx.operation },
+        error
+      )
+    }
+  },
+  async allFilters(_, payload, ctx) {
     try {
       return await controller.getFilters(payload, ctx)
     } catch (error) {

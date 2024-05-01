@@ -104,6 +104,9 @@ const recipeTypes = gql`
     rating: Float
     difficulty: Float
     tags: [String]
+    prepTime: Float
+    cookTime: Float
+    totalTime: Float
     author: Author
     image: String
     interactions: Interaction
@@ -222,11 +225,13 @@ const recipeTypes = gql`
   union FilterItems = Filter | Errors
 
   type Query {
-    getRecipes(userId: ID): RecipeItems
-    getRecipe(id: ID!): RecipeItem
-    getFilteredRecipes(filters: FilteredPayload): RecipeItems
-    getRecipesByKeyword(userId: ID, search: String!): RecipeItems
-    getFilters(userId: ID): FilterItems
+    allRecipes: RecipeItems
+    userRecipes(userId: ID!): RecipeItems
+    recipe(id: ID!): RecipeItem
+    filteredRecipes(filters: FilteredPayload): RecipeItems
+    searchResults(userId: ID, search: String!): RecipeItems
+    userFilters(userId: ID!): FilterItems
+    allFilters: FilterItems
   }
 
   input NewRecipePayload {
@@ -238,6 +243,8 @@ const recipeTypes = gql`
     category: ID!
     rating: Float!
     difficulty: Float!
+    prepTime: Float!
+    cookTime: Float!
     tags: [String]
     image: String
   }
@@ -251,6 +258,8 @@ const recipeTypes = gql`
     category: ID
     rating: Float
     difficulty: Float
+    prepTime: Float
+    cookTime: Float
     tags: [String]
     image: String
   }
