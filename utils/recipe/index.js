@@ -34,6 +34,9 @@ const allCounted = {
   cost: [],
   rating: [],
   difficulty: [],
+  prepTime: [],
+  cookTime: [],
+  totalTime: [],
   createdAt: []
 }
 
@@ -64,6 +67,9 @@ export const setFilters = recipes => {
     allCounted.cost.push(recipe.totalEstimatedCost)
     allCounted.rating.push(recipe.rating)
     allCounted.difficulty.push(recipe.difficulty)
+    allCounted.prepTime.push(recipe.prepTime)
+    allCounted.cookTime.push(recipe.cookTime)
+    allCounted.totalTime.push(recipe.totalTime)
     allCounted.createdAt.push(recipe.createdAt)
 
     filters.cookingMethod.push(recipe.cookingMethod)
@@ -91,6 +97,9 @@ export const setFilters = recipes => {
   filters.cost = setMinMaxStep(allCounted.cost)
   filters.rating = setMinMaxStep(allCounted.rating)
   filters.difficulty = setMinMaxStep(allCounted.difficulty)
+  filters.prepTime = setMinMaxStep(allCounted.prepTime)
+  filters.cookTime = setMinMaxStep(allCounted.cookTime)
+  filters.totalTime = setMinMaxStep(allCounted.totalTime)
   filters.createdAt = setMinMaxStep(allCounted.createdAt)
 
   return filters

@@ -77,10 +77,6 @@ class BaseResolver {
     }
   }
   handleSingleItemSuccess(values, typenameOverride) {
-    console.log({
-      __typename: typenameOverride ?? this.typenames.single,
-      ...values._doc
-    })
     return {
       __typename: typenameOverride ?? this.typenames.single,
       ...values._doc

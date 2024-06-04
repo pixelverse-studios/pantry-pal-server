@@ -8,6 +8,7 @@ const recipeSchema = new Schema({
     firstName: String
   },
   title: String,
+  servings: Number,
   ingredients: [
     {
       foodId: Number,

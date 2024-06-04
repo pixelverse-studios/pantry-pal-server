@@ -94,6 +94,7 @@ const recipeTypes = gql`
     _id: ID!
     user: User!
     title: String!
+    servings: Float
     ingredients: [Ingredient]
     macros: Macros
     totalEstimatedCost: Float
@@ -218,6 +219,9 @@ const recipeTypes = gql`
     rating: FilterRangeItem
     difficulty: FilterRangeItem
     tags: [String]
+    prepTime: FilterRangeItem
+    cookTime: FilterRangeItem
+    totalTime: FilterRangeItem
     createdAt: FilterRangeItem
     updatedAt: FilterRangeItem
     users: [User]
@@ -236,6 +240,7 @@ const recipeTypes = gql`
 
   input NewRecipePayload {
     title: String!
+    servings: Float!
     ingredients: [IngredientField!]!
     instructions: [String!]!
     cookingMethod: String!
@@ -251,6 +256,7 @@ const recipeTypes = gql`
 
   input EditRecipePayload {
     title: String
+    servings: Float
     ingredients: [IngredientField]
     instructions: [String]
     cookingMethod: String

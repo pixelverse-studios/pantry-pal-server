@@ -51,7 +51,6 @@ class RecipeController extends BaseResolver {
       userId != null
         ? await Recipe.find({ 'user._id': userId })
         : await Recipe.find()
-
     const filters = setFilters(recipes)
     return {
       __typename: 'Filter',
