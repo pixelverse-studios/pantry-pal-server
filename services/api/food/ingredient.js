@@ -1,5 +1,6 @@
 import { http, foodFetch } from '../../../utils/http.js'
 import { Topic, logInfo } from '../../../utils/logger.js'
+import { capitalizeFirstLetters } from '../../../utils/validations/stringUtils.js'
 
 const { GET } = http
 
@@ -41,7 +42,7 @@ export const getById = async (searchId, amount, units) => {
     caloricBreakdown: breakdown,
     id,
     image,
-    name,
+    name: capitalizeFirstLetters(name),
     estimatedCost: calculatedCost.toFixed(2),
     nutrition: nutrients,
     units: {

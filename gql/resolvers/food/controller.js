@@ -1,6 +1,7 @@
 import BaseResolver from '../../baseResolver.js'
 import { logError } from '../../../utils/logger.js'
 import { getByName, getById } from '../../../services/api/food/ingredient.js'
+import { capitalizeFirstLetters } from '../../../utils/validations/stringUtils.js'
 
 // TODO: Come back and ensure there is a valid token provided before making any API calls
 class FoodController extends BaseResolver {
@@ -34,7 +35,7 @@ class FoodController extends BaseResolver {
     const searchResults = await getByName(query)
     const reshaped = searchResults.results.map(result => ({
       id: result.id,
-      name: result.name,
+      name: capitalizeFirstLetters(result.name),
       image: result.image,
       units: result.possibleUnits
     }))

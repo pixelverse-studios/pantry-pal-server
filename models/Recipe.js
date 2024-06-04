@@ -8,6 +8,7 @@ const recipeSchema = new Schema({
     firstName: String
   },
   title: String,
+  servings: Number,
   ingredients: [
     {
       foodId: Number,
@@ -56,6 +57,9 @@ const recipeSchema = new Schema({
     fat: Number
   },
   totalEstimatedCost: Number,
+  prepTime: Number,
+  cookTime: Number,
+  totalTime: Number,
   instructions: [String],
   cookingMethod: String,
   allergies: [String],

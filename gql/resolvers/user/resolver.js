@@ -5,7 +5,7 @@ const controller = new UserController()
 const topic = Topic.User
 
 const Queries = {
-  async getAllUsers(_, __, ctx) {
+  async allUsers(_, __, ctx) {
     try {
       return await controller.getAll(ctx)
     } catch (error) {
@@ -19,9 +19,9 @@ const Queries = {
       )
     }
   },
-  async getUser(_, payload, ctx) {
+  async user(_, payload, ctx) {
     try {
-      return await controller.getByEmail(payload,ctx)
+      return await controller.getByEmail(payload, ctx)
     } catch (error) {
       return controller.catchError(
         'fetching user',

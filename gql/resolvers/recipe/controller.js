@@ -30,14 +30,13 @@ class RecipeController extends BaseResolver {
     throw new Error('No category was found with the provided ID')
   }
 
-  async getAll({ userId }) {
-    if (userId == undefined) {
-      const allRecipes = await Recipe.find()
-      return this.handleMultiItemSuccess(allRecipes)
-    } else {
-      const userRecipes = await Recipe.find({ 'user._id': userId })
-      return this.handleMultiItemSuccess(userRecipes)
-    }
+  async getAll() {
+    const allRecipes = await Recipe.find()
+    return this.handleMultiItemSuccess(allRecipes)
+  }
+  async getForUser({ userId }) {
+    const userRecipes = await Recipe.find({ 'user._id': userId })
+    return this.handleMultiItemSuccess(userRecipes)
   }
   async get({ id }, ctx) {
     const recipe = await Recipe.findById(id)
@@ -52,7 +51,6 @@ class RecipeController extends BaseResolver {
       userId != null
         ? await Recipe.find({ 'user._id': userId })
         : await Recipe.find()
-
     const filters = setFilters(recipes)
     return {
       __typename: 'Filter',
@@ -143,6 +141,7 @@ class RecipeController extends BaseResolver {
         ratings: [],
         comments: []
       },
+      totalTime: payload.prepTime + payload.cookTime,
       updatedAt: new Date()
     })
     const saved = await newRecipe.save()
@@ -174,6 +173,7 @@ class RecipeController extends BaseResolver {
         `Unable to edit recipe ${id}`
       )
     }
+    editedPayload.totalTime = payload.prepTime + payload.cookTime
     const updated = await Recipe.findByIdAndUpdate(id, editedPayload, {
       new: true
     })
