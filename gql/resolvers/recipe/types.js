@@ -90,6 +90,11 @@ const recipeTypes = gql`
     comments: [Comment]
   }
 
+  type Image {
+    src: String
+    publicId: String
+  }
+
   type Recipe {
     _id: ID!
     user: User!
@@ -102,14 +107,14 @@ const recipeTypes = gql`
     cookingMethod: String
     allergies: [String]
     category: Category
-    rating: Float
+    # rating: Float
     difficulty: Float
     tags: [String]
     prepTime: Float
     cookTime: Float
     totalTime: Float
     author: Author
-    image: String
+    image: Image
     interactions: Interaction
     createdAt: Date
     updatedAt: Date
@@ -147,10 +152,11 @@ const recipeTypes = gql`
   }
 
   input IngredientField {
-    foodId: Float
+    id: Float
     name: String
     image: String
     units: UnitsField
+    amount: Float
     possibleUnits: [String]
     nutrition: [FoodNutrientField]
     estimatedCost: Float
@@ -179,7 +185,7 @@ const recipeTypes = gql`
     cost: FilteredRange
     allergies: [String]
     category: [ID]
-    rating: FilteredRange
+    # rating: FilteredRange
     difficulty: FilteredRange
     tags: [String]
     createdAt: FilteredRange
@@ -208,6 +214,7 @@ const recipeTypes = gql`
     carbs: FilterRangeItem
     fat: FilterRangeItem
   }
+
   type Filter {
     titles: [String]
     ingredients: FilterIngredients
@@ -238,6 +245,11 @@ const recipeTypes = gql`
     allFilters: FilterItems
   }
 
+  input ImageInput {
+    src: String
+    publicId: String
+  }
+
   input NewRecipePayload {
     title: String!
     servings: Float!
@@ -246,12 +258,12 @@ const recipeTypes = gql`
     cookingMethod: String!
     allergies: [String]
     category: ID!
-    rating: Float!
+    # rating: Float!
     difficulty: Float!
     prepTime: Float!
     cookTime: Float!
     tags: [String]
-    image: String
+    image: ImageInput
   }
 
   input EditRecipePayload {
@@ -262,12 +274,12 @@ const recipeTypes = gql`
     cookingMethod: String
     allergies: [String]
     category: ID
-    rating: Float
+    # rating: Float
     difficulty: Float
     prepTime: Float
     cookTime: Float
     tags: [String]
-    image: String
+    image: ImageInput
   }
 
   type Mutation {

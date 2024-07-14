@@ -103,7 +103,9 @@ class RecipeController extends BaseResolver {
       )
     }
 
-    const category = await this.getFullCategory(payload.category)
+    const category = await this.getFullCategory(
+      payload.category?.id ?? payload.category
+    )
     const macros = {
       calories: 0,
       protein: 0,

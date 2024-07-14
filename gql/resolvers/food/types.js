@@ -61,6 +61,7 @@ const foodTypes = gql`
     possibleUnits: [String]
     nutrition: [FoodNutrients]
     estimatedCost: Float
+    amount: Float
     caloricBreakdown: CaloricBreakdown
     aisle: [String]
   }

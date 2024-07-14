@@ -11,7 +11,7 @@ const recipeSchema = new Schema({
   servings: Number,
   ingredients: [
     {
-      foodId: Number,
+      id: Number,
       name: String,
       image: String,
       units: {
@@ -73,7 +73,10 @@ const recipeSchema = new Schema({
     rating: Number,
     difficulty: Number
   },
-  image: String,
+  image: {
+    src: String,
+    publicId: String
+  },
   interactions: {
     ratings: [
       {
