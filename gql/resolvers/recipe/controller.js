@@ -103,22 +103,31 @@ class RecipeController extends BaseResolver {
       )
     }
 
-    const category = await this.getFullCategory(payload.category)
+    const category = await this.getFullCategory(
+      payload.category?.id ?? payload.category
+    )
     const macros = {
       calories: 0,
       protein: 0,
       carbs: 0,
       fat: 0
     }
+    const { number } = this.utils
     const costs = []
     payload.ingredients.forEach(ingredient => {
       costs.push(ingredient.estimatedCost)
       const getNutrientValue = label =>
         ingredient.nutrition.find(nutrient => nutrient.name === label)
-      macros.calories += getNutrientValue('Calories').amount
-      macros.protein += getNutrientValue('Protein').amount
-      macros.carbs += getNutrientValue('Carbohydrates').amount
-      macros.fat += getNutrientValue('Fat').amount
+      macros.calories += number.handleRoundNumber(
+        getNutrientValue('Calories').amount
+      )
+      macros.protein += number.handleRoundNumber(
+        getNutrientValue('Protein').amount
+      )
+      macros.carbs += number.handleRoundNumber(
+        getNutrientValue('Carbohydrates').amount
+      )
+      macros.fat += number.handleRoundNumber(getNutrientValue('Fat').amount)
     })
 
     const totalEstimatedCost = costs.reduce((accumulator, currentValue) => {

@@ -30,10 +30,22 @@ export const getById = async (searchId, amount, units) => {
   const carbs = nutrients.find(item => item.name === 'Carbohydrates')
   const fats = nutrients.find(item => item.name === 'Fat')
   const breakdown = {
-    calories: { value: calories.amount, percent: calories.percentOfDailyNeeds },
-    protein: { value: protein.amount, percent: protein.percentOfDailyNeeds },
-    carbs: { value: carbs.amount, percent: carbs.percentOfDailyNeeds },
-    fats: { value: fats.amount, percent: fats.percentOfDailyNeeds }
+    calories: {
+      value: parseFloat(calories.amount.toFixed(2)),
+      percent: calories.percentOfDailyNeeds
+    },
+    protein: {
+      value: parseFloat(protein.amount.toFixed(2)),
+      percent: protein.percentOfDailyNeeds
+    },
+    carbs: {
+      value: parseFloat(carbs.amount.toFixed(2)),
+      percent: carbs.percentOfDailyNeeds
+    },
+    fats: {
+      value: parseFloat(fats.amount.toFixed(2)),
+      percent: fats.percentOfDailyNeeds
+    }
   }
 
   const calculatedCost = estimatedCost.value / 100
@@ -45,6 +57,7 @@ export const getById = async (searchId, amount, units) => {
     name: capitalizeFirstLetters(name),
     estimatedCost: calculatedCost.toFixed(2),
     nutrition: nutrients,
+    amount,
     units: {
       base: unit,
       short: unitShort,

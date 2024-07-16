@@ -1,5 +1,6 @@
 import express from 'express'
 import { createServer } from 'http'
+import bodyParser from 'body-parser'
 import { connect } from 'mongoose'
 import { ApolloServer } from 'apollo-server-express'
 import {
@@ -44,6 +45,9 @@ startDB()
 const isProduction = config.environment === PRODUCTION
 async function startApolloServer() {
   const app = express()
+  // Increase the request body size limit
+  app.use(bodyParser.json({ limit: '50mb' })) // Adjust the limit as needed
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
   const httpServer = createServer(app)
   const apollogPlugins = [ApolloServerPluginDrainHttpServer({ httpServer })]
   if (isProduction) {
