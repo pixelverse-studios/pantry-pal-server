@@ -1,6 +1,7 @@
 import deepEqual from 'deep-equal'
 import { FormValidations } from '../utils/validations/form.js'
 import * as StringValidations from '../utils/validations/stringUtils.js'
+import * as NumberUtils from '../utils/validations/numberUtils.js'
 import { dateToUTC, dateToLocal } from '../utils/format/dates.js'
 import { logInfo, logWarning } from '../utils/logger.js'
 import User from '../models/User.js'
@@ -21,6 +22,7 @@ class BaseResolver {
     this.formatters = {
       date: { dateToLocal, dateToUTC }
     }
+    this.utils = { number: NumberUtils }
     this.payload = null
     this.schemas = { User }
 
