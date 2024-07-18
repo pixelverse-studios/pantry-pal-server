@@ -54,6 +54,7 @@ class UserController extends BaseResolver {
     if (user !== null) {
       user.lastLogin = Date.now()
       user.newUser = false
+      user.avatar = avatar
       const saved = await user.save()
       return this.handleSingleItemSuccess(saved)
     } else {
