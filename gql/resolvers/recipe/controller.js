@@ -31,11 +31,13 @@ class RecipeController extends BaseResolver {
   }
 
   async getAll() {
-    const allRecipes = await Recipe.find()
+    const allRecipes = await Recipe.find().sort({ createdAt: -1 })
     return this.handleMultiItemSuccess(allRecipes)
   }
   async getForUser({ userId }) {
-    const userRecipes = await Recipe.find({ 'user._id': userId })
+    const userRecipes = await Recipe.find({ 'user._id': userId }).sort({
+      createdAt: -1
+    })
     return this.handleMultiItemSuccess(userRecipes)
   }
   async get({ id }, ctx) {
