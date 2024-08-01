@@ -47,7 +47,8 @@ const recipeSchema = new Schema({
           value: Number
         }
       },
-      aisle: [String]
+      aisle: [String],
+      amount: Number
     }
   ],
   macros: {

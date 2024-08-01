@@ -37,10 +37,11 @@ const recipeTypes = gql`
   }
 
   type Ingredient {
-    foodId: Float
+    id: Float
     name: String
     image: String
     units: Units
+    amount: Float
     possibleUnits: [String]
     nutrition: [FoodNutrients]
     caloricBreakdown: CaloricBreakdown
@@ -71,6 +72,7 @@ const recipeTypes = gql`
     _id: ID
     firstName: String
     email: String
+    avatar: String
   }
 
   type Rating {

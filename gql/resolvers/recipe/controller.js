@@ -137,12 +137,14 @@ class RecipeController extends BaseResolver {
     }, 0)
 
     const user = await this.schemas.User.findById(userId)
+
     const newRecipe = new Recipe({
       ...payload,
       user: {
         _id: user._id,
         firstName: user.firstName,
-        email: user.email
+        email: user.email,
+        avatar: user.avatar
       },
       category,
       image: payload?.image != null ? payload.image : '',
