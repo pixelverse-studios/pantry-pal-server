@@ -54,7 +54,6 @@ class RecipeController extends BaseResolver {
       carbs: number.handleRoundNumber(recipe.macros.carbs),
       fat: number.handleRoundNumber(recipe.macros.fat)
     }
-    console.log(recipe)
     return this.handleSingleItemSuccess(recipe)
   }
   async getFilters({ userId }) {
