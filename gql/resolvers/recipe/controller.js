@@ -46,6 +46,15 @@ class RecipeController extends BaseResolver {
       this.error = this.errors.notFound(this.typenames.single)
       return this.handleError(Topic.Recipe, ctx.operation, 'Recipe not found')
     }
+
+    const { number } = this.utils
+    recipe.macros = {
+      calories: number.handleRoundNumber(recipe.macros.calories),
+      protein: number.handleRoundNumber(recipe.macros.protein),
+      carbs: number.handleRoundNumber(recipe.macros.carbs),
+      fat: number.handleRoundNumber(recipe.macros.fat)
+    }
+    console.log(recipe)
     return this.handleSingleItemSuccess(recipe)
   }
   async getFilters({ userId }) {

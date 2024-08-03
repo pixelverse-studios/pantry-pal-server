@@ -30,6 +30,7 @@ const Queries = {
     try {
       return await controller.get(payload, ctx)
     } catch (error) {
+      console.log(error)
       controller.catchError(
         'fetching recipe',
         { topic, operation: ctx.operation },
