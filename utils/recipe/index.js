@@ -17,12 +17,12 @@ const filters = {
     fat: defaultRange
   },
   cost: defaultRange,
-  cookingMethod: [],
   category: [],
   allergies: [],
   rating: defaultRange,
   difficulty: defaultRange,
   tags: [],
+  notes: [],
   createdAt: defaultRange,
   users: []
 }
@@ -72,10 +72,10 @@ export const setFilters = recipes => {
     allCounted.totalTime.push(recipe.totalTime)
     allCounted.createdAt.push(recipe.createdAt)
 
-    filters.cookingMethod.push(recipe.cookingMethod)
     filters.category.push(recipe.category)
     filters.allergies.push(...recipe.allergies)
     filters.tags.push(...recipe.tags)
+    filters.notes.push(...recipe.notes)
     filters.users.push(recipe.user)
   })
 
@@ -84,10 +84,10 @@ export const setFilters = recipes => {
   filters.ingredients.aisles = removeDuplicateStrings(
     filters.ingredients.aisles
   )
-  filters.cookingMethod = removeDuplicateStrings(filters.cookingMethod)
   filters.category = removeDuplicateObjects(filters.category)
   filters.allergies = removeDuplicateStrings(filters.allergies)
   filters.tags = removeDuplicateStrings(filters.tags)
+  filters.notes = removeDuplicateStrings(filters.notes)
   filters.users = removeDuplicateObjects(filters.users)
 
   filters.macros.calories = setMinMaxStep(allCounted.calories)

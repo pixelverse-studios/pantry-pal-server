@@ -106,12 +106,12 @@ const recipeTypes = gql`
     macros: Macros
     totalEstimatedCost: Float
     instructions: [String]
-    cookingMethod: String
     allergies: [String]
     category: Category
     # rating: Float
     difficulty: Float
     tags: [String]
+    notes: [String]
     prepTime: Float
     cookTime: Float
     totalTime: Float
@@ -183,13 +183,13 @@ const recipeTypes = gql`
     ingredientNames: [String]
     ingredientAisles: [String]
     macros: FilteredMacros
-    cookingMethod: [String]
     cost: FilteredRange
     allergies: [String]
     category: [ID]
     # rating: FilteredRange
     difficulty: FilteredRange
     tags: [String]
+    notes: [String]
     createdAt: FilteredRange
     users: [String]
   }
@@ -222,12 +222,12 @@ const recipeTypes = gql`
     ingredients: FilterIngredients
     macros: FilterMacros
     cost: FilterRangeItem
-    cookingMethod: [String]
     category: [Category]
     allergies: [String]
     rating: FilterRangeItem
     difficulty: FilterRangeItem
     tags: [String]
+    notes: [String]
     prepTime: FilterRangeItem
     cookTime: FilterRangeItem
     totalTime: FilterRangeItem
@@ -240,6 +240,7 @@ const recipeTypes = gql`
   type Query {
     allRecipes: RecipeItems
     userRecipes(userId: ID!): RecipeItems
+
     recipe(id: ID!): RecipeItem
     filteredRecipes(filters: FilteredPayload): RecipeItems
     searchResults(userId: ID, search: String!): RecipeItems
@@ -257,7 +258,6 @@ const recipeTypes = gql`
     servings: Float!
     ingredients: [IngredientField!]!
     instructions: [String!]!
-    cookingMethod: String!
     allergies: [String]
     category: ID!
     # rating: Float!
@@ -265,6 +265,7 @@ const recipeTypes = gql`
     prepTime: Float!
     cookTime: Float!
     tags: [String]
+    notes: [String]
     image: ImageInput
   }
 
@@ -273,7 +274,6 @@ const recipeTypes = gql`
     servings: Float
     ingredients: [IngredientField]
     instructions: [String]
-    cookingMethod: String
     allergies: [String]
     category: ID
     # rating: Float
@@ -281,6 +281,7 @@ const recipeTypes = gql`
     prepTime: Float
     cookTime: Float
     tags: [String]
+    notes: [String]
     image: ImageInput
   }
 
