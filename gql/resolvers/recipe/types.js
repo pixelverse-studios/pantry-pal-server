@@ -262,8 +262,8 @@ const recipeTypes = gql`
     category: ID!
     # rating: Float!
     difficulty: Float
-    prepTime: Float!
-    cookTime: Float!
+    prepTime: Float
+    cookTime: Float
     tags: [String]
     notes: [String]
     image: ImageInput
