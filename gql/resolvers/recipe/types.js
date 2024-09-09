@@ -257,11 +257,11 @@ const recipeTypes = gql`
     title: String!
     servings: Float!
     ingredients: [IngredientField!]!
-    instructions: [String!]!
+    instructions: [String]
     allergies: [String]
     category: ID!
     # rating: Float!
-    difficulty: Float!
+    difficulty: Float
     prepTime: Float!
     cookTime: Float!
     tags: [String]
