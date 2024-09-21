@@ -5,13 +5,15 @@ import commonCategoryTypes from './categories/common/types.js'
 import customCategoryTypes from './categories/custom/types.js'
 import foodTypes from './food/types.js'
 import recipeTypes from './recipe/types.js'
+import feedbackTypes from './feedback/types.js'
 
 export default [
-  userTypes,
-  faqTypes,
-  patchNoteTypes,
   commonCategoryTypes,
   customCategoryTypes,
+  faqTypes,
+  feedbackTypes,
   foodTypes,
-  recipeTypes
+  patchNoteTypes,
+  recipeTypes,
+  userTypes
 ]

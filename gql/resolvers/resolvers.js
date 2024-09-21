@@ -5,6 +5,7 @@ import CommonCategoryResolver from './categories/common/resolver.js'
 import CustomCategoryResolver from './categories/custom/resolver.js'
 import FoodResolver from './food/resolver.js'
 import RecipeResolver from './recipe/resolver.js'
+import FeedbackResolver from './feedback/resolver.js'
 
 export const Query = {
   ...UserResolver.Queries,
@@ -13,6 +14,7 @@ export const Query = {
   ...CommonCategoryResolver.Queries,
   ...CustomCategoryResolver.Queries,
   ...FoodResolver.Queries,
+  ...FeedbackResolver.Queries,
   ...RecipeResolver.Queries
 }
 
@@ -22,5 +24,6 @@ export const Mutation = {
   ...PatchNotesResolver.Mutations,
   ...CommonCategoryResolver.Mutations,
   ...CustomCategoryResolver.Mutations,
-  ...RecipeResolver.Mutations
+  ...RecipeResolver.Mutations,
+  ...FeedbackResolver.Mutations
 }
