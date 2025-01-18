@@ -15,4 +15,6 @@ const getAll = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export default { getAll }
+const create = async (req: Request, res: Response): Promise<void> => {}
+
+export default { getAll, create }

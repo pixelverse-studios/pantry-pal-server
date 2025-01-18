@@ -24,7 +24,7 @@ export interface AuthenticatedRequest extends Request {
   user?: UserPayload
 }
 
-export const authMiddleware = async (
+export const validateAuth = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction

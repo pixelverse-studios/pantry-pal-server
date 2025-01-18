@@ -5,7 +5,7 @@ import cors from 'cors'
 import categoriesRouter from './routes/categories'
 import foodRouter from './routes/food'
 import recipesRouter from './routes/recipes'
-import usersRouter from './routes/users'
+import userController from './controllers/users'
 
 import 'dotenv/config'
 
@@ -17,10 +17,11 @@ process.title = 'MealThyme-Server'
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use(usersRouter)
-app.use(foodRouter)
-app.use(categoriesRouter)
-app.use(recipesRouter)
+app.use(userController)
+// app.use(usersRouter)
+// app.use(foodRouter)
+// app.use(categoriesRouter)
+// app.use(recipesRouter)
 
 app.use(
   (
